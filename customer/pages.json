@@ -1,0 +1,688 @@
+{
+	"easycom": {
+			"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+		},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	{
+		"path" : "pages/home/guidepage",
+		"style" : 
+		{
+			"navigationBarTitleText" : ""
+		}
+	},
+		{
+			"path" : "pages/initPage",
+			"style" :                                                                                    
+			{
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+			
+		},
+		{
+			"path": "pages/main/main",
+			"style": {
+				"backgroundColor": "#ffffff"
+			}
+		},
+		{
+			"path": "pages/home/home",
+			"style": {}
+		},
+		{
+			"path": "pages/follow/follow",
+			"style": {
+				"onReachBottomDistance": 50,
+				"navigationBarTextStyle": "white" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/together/together",
+			"style": {
+				"navigationBarTextStyle": "white" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/score/score",
+			"style": {},
+			"app-plus": {
+				"scrollIndicator": "none",
+				"navigationBarTextStyle": "white" //用于配置状态栏的字体颜色
+			}
+		},
+		//登录
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+
+		// 跟单大厅
+		{
+			"path": "pages/follow/MyOrder",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/follow/homepage",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		},
+		// 合买大厅
+		{
+			"path": "pages/together/hemaixiangqing",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/together/gerenzhongxin"
+		},
+
+
+		// 个人中心
+		{
+			"path": "pages/home/myData/myData",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/home/recordPages/recordPages",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		}
+		// 反馈中心
+		, {
+			"path": "pages/home/helpcenter/helpcenter",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		},
+		// 反馈记录
+		{
+			"path": "pages/home/helpcenter/helpRecord/helpRecord",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		},
+
+
+
+		// 投注页面
+		{
+			"path": "pages/main/bet/jclq/jclq",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/bet/jczq/jczq",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"onReachBottomDistance": 0,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/bet/bjdc/bjdc",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"onReachBottomDistance": 0,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/bet/sfgg/sfgg",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/bet/renxuan9/renxuan9",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/bet/sfc/sfc",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+
+		{
+			"path": "pages/main/bet/7lecai/7lecai",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		},
+		{
+			"path": "pages/main/bet/happy8/happy8",
+			"style": {
+				"navigationBarBackgroundColor": "#fff",
+				"navigationBarTextStyle": "black",
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		},
+		{
+			"path": "pages/main/bet/shuangseqiu/shuangseqiu",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		},
+		{
+			"path": "pages/main/bet/daletou/daletou",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, { //福彩3D页面
+			"path": "pages/main/bet/fucai3D/fucai3D",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, { //七星彩页面
+			"path": "pages/main/bet/7xincai/7xincai",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}
+
+		// 排列三
+		, {
+			"path": "pages/main/bet/arrange3/arrange3",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}
+		// 排列五
+		, {
+			"path": "pages/main/bet/arrange5/arrange5",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		},
+
+		// 投注提交确认页面
+		{
+			"path": "pages/main/submit/submit_ticai",
+			"style": {
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/submit/submit_shuzi",
+			"style": {
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/submit/buyTogether",
+			"style": {
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		},
+		{
+			"path": "pages/main/submit/spell",
+			"style": {
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+		}, {
+			"path": "pages/together/togetherOpen/togetherOpen",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}
+		//跟单的搜索
+		, {
+			"path": "pages/follow/followSearch/followSearch",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/inviteRecord/inviteRecord",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/tradingRecord/tradingRecord",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/StoreInformation/StoreInformation",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/redBag/redBag",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/troubleShooting/troubleShooting",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/HomeTopUp/HomeTopUp",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/else/userAgreement/userAgreement",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/HomeTopUp/bill/bill",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/HomeTopUp/withdrawDeposit/withdrawDeposit",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+
+			}
+
+		}, {
+			"path": "pages/home/HomeTopUp/withdrawDeposit/record/record",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/main/submit/optimizing",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/main/submit/optimizingDetails",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/login/register",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/login/forgetThePassword",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/home/sharePage/sharePage",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "components/score/numerItme/numerItme",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/score/score_shuzi/score_shuzi",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/score/score_ticai/gameParticulars",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/score/gameRecord/gameRecord",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/shop_select/select_page",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}
+		// ,
+		// {//比分备份页
+		//     "path" : "pages/score/score_backups",
+		//     "style" :                                                                                    
+		//     {
+		//         "navigationBarTitleText": "",
+		//         "enablePullDownRefresh": false,
+		// 		"navigationBarTextStyle":"black" //用于配置状态栏的字体颜色
+		//     }
+
+		// }
+		, {
+			"path": "pages/home/bankCardSet/bankCardSet",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "components/home/myBankCard/myBankCard",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		}
+
+		, {
+			"path": "pages/home/groupChat/groupChat",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/main/bet/jczq/jczq_new",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"onReachBottomDistance": 0,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/main/bet/jclq/jclq_new",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/main/bet/bjdc/bjdc_new",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/main/bet/sfgg/sfgg_new",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/home/shop_announcement/shop_announcement",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/main/bet/sfc/sfc_new",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		}, {
+			"path": "pages/main/bet/renxuan9/renxuan9_new",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black" //用于配置状态栏的字体颜色
+			}
+
+		},
+		{
+			"path" : "pages/trend/trend",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/trend/trendView",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/kaijiang/kaijiang",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/home/usermanagement/usermanagement",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/home/userinformation/userinformation",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/home/userUupPage/userUupPage",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/home/userUupPage/userSupPageSup/userSupPageSup",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/home/userUupPage/userSupPageSup/userTouzu",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/login/goflychat",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/home/qitapay",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/home/HomeTopUp/dangpay",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/score/analysis",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/score/score_ticai/liveurl",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/score/livevideo",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		}
+	],
+	// "tabBar": {
+	// 	"borderStyle": "white",
+	// 	"backgroundColor": "#fbfbfb ",
+	// 	"color": "black",
+	// 	"selectedColor": "#da2f2d",
+	// 	"list": [{
+	// 		"pagePath": "pages/main/main",
+	// 		// "iconPath": "static/img/tabbar/home.png",
+	// 		// "selectedIconPath": "static/img/tabbar/home2.png",
+	// 		"text": "首页"
+	// 	}, {
+	// 		"pagePath": "pages/follow/follow",
+	// 		// "iconPath": "static/img/tabbar/follow.png",
+	// 		// "selectedIconPath": "static/img/tabbar/follow2.png",
+	// 		"text": "跟单"
+	// 	}, {
+	// 		"pagePath": "pages/together/together",
+	// 		// "iconPath": "static/img/tabbar/news.png",
+	// 		// "selectedIconPath": "static/img/tabbar/news2.png",
+	// 		"text": "合买"
+	// 	}, {
+	// 		"pagePath": "pages/score/score",
+	// 		// "iconPath": "static/img/tabbar/score.png",
+	// 		// "selectedIconPath": "static/img/tabbar/score2.png",
+	// 		"text": "比分"
+	// 	}, {
+	// 		"pagePath": "pages/home/home",
+	// 		// "iconPath": "static/img/tabbar/user.png",
+	// 		// "selectedIconPath": "static/img/tabbar/user2.png",
+	// 		"text": "我的"
+	// 	}],
+	// 	"custom": true  // 启用自定义 tabBar
+	// },
+
+	"globalStyle": {
+		"navigationStyle": "custom",
+		"navigationBarTitleText": "易下"
+		// "navigationBarTextStyle": "black",
+		// "navigationBarTitleText": "uni-app",
+		// "navigationBarBackgroundColor": "#F8F8F8",
+		// "backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+}

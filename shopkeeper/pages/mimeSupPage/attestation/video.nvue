@@ -1,0 +1,41 @@
+<template>
+	<view>
+		<view class="statusBar" :style="'height: '+ statusBarHeight +'px;'"></view>
+		<uni-nav-bar title="查看视频" leftIcon="back" @clickLeft="back" leftText="返回" />
+		<view >
+			<video :src="videourl" :style="'width: '+ windowWidth +'px; height: '+ windowHeight +'px;'"></video>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				videourl:'',
+				windowWidth:'',
+				windowHeight:'',
+				statusBarHeight:''
+			}
+		},
+		methods: {
+		back(){
+			uni.navigateBack()
+		}
+		},
+		onLoad(e) {
+			this.statusBarHeight=uni.getSystemInfoSync().statusBarHeight//获取手机状态栏高度
+			this.windowWidth = uni.getSystemInfoSync().windowWidth
+			this.windowHeight = uni.getSystemInfoSync().windowHeight-this.statusBarHeight-50
+			this.videourl=e.url
+			console.log(e)
+		}
+	}
+</script>
+
+<style>
+	.statusBar {
+		width: 100%;
+		background-color:white;
+	}
+</style>

@@ -1,0 +1,118 @@
+<template>
+	<!-- #ifdef APP-PLUS -->
+	<view :style="{'padding-top':winData.statusBarHeight+'px'}">
+		<uni-segmented-control
+			:current="current" :values="tabsData" 
+			@clickItem="onClickItem" style-type="text" 
+			active-color="#519a67">
+		</uni-segmented-control>
+	</view>
+	<view v-if="current==1">
+		<numerItem></numerItem>
+	</view>
+	<!-- #endif -->
+	
+	<!-- #ifndef APP-PLUS -->
+	<web-view src="https://m.sporttery.cn/wap/fb_livescore.html" :height="winData.windowHeight+'px'" :width="winData.windowWidth+'px'"></web-view>
+	<!-- #endif -->
+</template>
+<script setup>
+	import numerItem from "@/components/score/numerItme/numerItme.vue"
+	import {onBackPress} from "@dcloudio/uni-app"
+	import {onBeforeMount,ref,reactive,getCurrentInstance, getCurrentScope,nextTick} from 'vue';
+	const {proxy,ctx} = getCurrentInstance()
+	const state_Height=ref(0)
+	const winData=ref([])
+	const embed=ref(null)
+	const ws=ref(null)
+	const tabsData=['竞彩类','数字彩']
+	const current=ref(0)//头部选择器默认值
+	const onClickItem=(e)=>{
+		if(e.currentIndex==0){
+			if(embed.value){embed.value.close()}
+			show()
+		}else{
+			if(embed.value){embed.value.close()}
+		}
+		current.value=e.currentIndex
+	}
+	onBeforeMount(()=>{
+		winData.value=uni.getSystemInfoSync()
+		if(embed.value){embed.value.close()}
+		show()
+	})
+	
+	
+	const show=()=>{
+		//#ifdef APP-PLUS
+			ws.value=plus.webview.currentWebview();//拿到实例
+			state_Height.value=uni.getSystemInfoSync().statusBarHeight
+			embed.value=plus.webview.create('http://1.12.53.8:1234/#/tabs/match', '', {top:state_Height.value+50,bottom:'0px'});
+			ws.value.append(embed.value);
+			embed.value.addEventListener('loaded',function(){
+				deleteDocm()
+			},false)
+		//#endif
+	}
+	
+	const deleteDocm=()=>{
+		embed.value.evalJS(`
+			var downNumber=document.getElementsByTagName('download-head').length;
+			for(var i=0;i<downNumber;i++){
+				document.getElementsByTagName('download-head')[i].style.display='none';
+			}
+			document.getElementsByTagName('ion-tab-bar')[0].style.display='none';
+			var number=document.getElementsByClassName('liveSubTab').length;
+			if(number==1){
+				var number3=document.getElementsByClassName('liveSubTab')[0].getElementsByTagName('a').length
+				document.getElementsByClassName('liveSubTab')[0].getElementsByTagName('a')[Number(number3)-1].style.display='none';
+			}else{
+				var number4=document.getElementsByClassName('liveSubTab')[1].getElementsByTagName('a').length
+				document.getElementsByClassName('liveSubTab')[1].getElementsByTagName('a')[Number(number4)-1].style.display='none';
+			};
+			var a2 = document.getElementsByClassName('wd_tabBar').length;
+			if(a2>0){
+				document.getElementsByClassName('wd_tabBar')[0].getElementsByTagName('a')[3].style.display='none';
+				document.getElementsByClassName('wd_tabBar')[0].getElementsByTagName('a')[4].style.display='none';
+				document.getElementsByClassName('wd_tabBar')[0].getElementsByTagName('a')[2].addEventListener('click',function(){
+					setTimeout(()=>{
+						var qingNumber=document.getElementsByClassName('qingbaoBlock').length
+						for(var i=0;i<qingNumber;i++){
+							document.getElementsByClassName('qingbaoBlock')[i].style.display='none';
+						}
+					},1000)
+					document.getElementsByClassName('slide_bar')[0].getElementsByTagName('a')[1].style.display='none';
+				})
+				
+			};
+			
+			var a3 = document.getElementsByTagName('ion-footer').length;
+			for(var i = 0;i < a3;i++){
+				document.getElementsByTagName('ion-footer')[i].style.display='none';
+			}
+			
+			var wrapNumber=document.getElementsByClassName('wd_trIcon_wrap').length;
+			for(var i = 0;i < wrapNumber;i++){
+				document.getElementsByClassName('wd_trIcon_wrap')[i].style.display='none';
+			}
+			setTimeout(()=>{
+				var qingNumber=document.getElementsByClassName('qingbaoBlock').length
+				for(var i=0;i<qingNumber;i++){
+					document.getElementsByClassName('qingbaoBlock')[i].style.display='none';
+				}
+				var chatNumber=document.getElementsByTagName('chat').length
+				for(var i=0;i<chatNumber;i++){
+					document.getElementsByTagName('chat')[i].style.display='none';
+				}
+				document.getElementsByClassName('slide_bar')[0].getElementsByTagName('a')[1].style.display='none';
+				document.getElementsByClassName('wd_liveBtnWrap')[0].getElementsByTagName('a')[1].style.display='none';
+				document.getElementsByTagName('match-detail-football-tj')[0].style.display='none';
+				
+			},800)
+		
+		`)
+	}
+</script>
+
+<style>
+</style>

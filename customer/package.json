@@ -1,0 +1,33 @@
+{
+    "id": "fui-textarea",
+    "name": "Textarea 多行输入框（fui-textarea）",
+    "version": "v1.6.1",
+    "description": "FirstUI Textarea 多行输入框，该组件是对原生textarea组件的增强，内置了常用布局样式，同时包含 textarea 所有功能。",
+    "keywords": [
+        "Textarea",
+        "多行输入框",
+        "fui-textarea",
+        "FirstUI",
+        "Nvue"
+    ],
+    "dcloudext": {
+        "category": [
+            "前端组件",
+            "通用组件"
+        ]
+    },
+    "dependencies": {
+        "@zxlee/z-tabs": "^0.3.0",
+        "flv.js": "^1.6.2",
+        "hls.js": "^1.5.17",
+        "moment": "^2.30.1",
+        "mui-player": "^1.8.1",
+        "mui-player-desktop-plugin": "^1.6.0",
+        "uview-ui": "^2.0.38",
+        "x2js": "^3.4.4"
+    },
+    "devDependencies": {
+        "sass": "^1.83.0",
+        "sass-loader": "^10.5.2"
+    }
+}

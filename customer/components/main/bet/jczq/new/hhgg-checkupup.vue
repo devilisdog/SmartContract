@@ -1,0 +1,425 @@
+<template>
+	<view style="background-color: #fff;border-radius:20rpx 20rpx 0 0;">
+		<view class="title" style="text-align: center;">
+			<view class="boxt" style="flex:1;">
+				<text style="font-size: 40rpx; font-weight: 600;">{{props.fixSelectData.short_home}}</text>
+			</view>
+			<view class="boxt" style="flex:1;">
+				<text style="color: #ff0000; font-size: 40rpx; font-weight: 600;">VS</text>
+			</view>
+			<view class="boxt" style="flex:1;">
+				<text style="font-size: 40rpx; font-weight: 600; ">{{props.fixSelectData.short_away}}</text>
+			</view>
+		</view>
+		<scroll-view :scroll-top="0" scroll-y="true" class="scroll-Y">
+			<view class="title"><!-- 胜平负让球 -->
+				<text style="font-size: 35rpx; font-weight: 600;">胜平负让球
+					<text :class="props.fixSelectData.rq.goalLine-0 > 0 ?'red':'green'" style="font-size: 35rpx; font-weight: 600;">
+						{{props.fixSelectData.rq.goalLine}}
+					</text>
+				</text>
+			</view>
+			<view class="checkbox ">
+				<view class="box"><!-- 胜平负 -->
+					<view class="box" v-if="noshowgame(0,'spf')">
+						<view class="check" v-for="item,index in props.styledata.value.spf.res" :key="index"
+							:style="props.styledata.value.spf.style[index]==0?'':' background-color: red; color: #fff;'"
+							@click="change('spf',index,0)">
+							<view class="huadan">
+			
+								<view :class="noshowdan(0)?'inner-box1':''">
+									<text v-show="noshowdan(0)" style="transform: scale(0.8);">单</text>
+								</view>
+								<text style="font-weight: 700;">{{item}}</text>
+								<view style="display: flex;flex-direction: row;">
+									<text style="margin-left: 5px; font-weight: 700;">
+										{{props.fixSelectData.spf[index]}}
+									</text>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view v-else class="check" style="flex: 1;height: 85rpx;">
+						<view style="color: #999999;">未开售</view>
+					</view>
+				</view>
+				<view class="box"><!-- 让球胜平负 -->
+					<view class="box" v-if="noshowgame(1,'rq')">
+						<view class="check" v-for="item,index in props.styledata.value.rq.res"
+							:key="index"
+							:style="props.styledata.value.rq.style[index]==0?'':' background-color: red; color: #fff;'"
+							@click="change('rq',index,1)">
+							<view class="huadan">
+								<text style="font-weight: 700;">{{item}}</text>
+								<view style="display: flex;flex-direction: row;">
+									<text style="margin-left: 5px; font-weight: 700;">
+										{{props.fixSelectData.rq[index]}}
+									</text>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view v-else class="check" style="flex: 1;">
+						<view style="color: #999999;">
+							未开售
+						</view>
+					</view>
+				</view>
+			</view>
+			
+			<view class="title"><!-- 比分 -->
+				<view style="margin-top: 10rpx;">
+					<text v-show="noshowdan(2)" class="dan_lable">单</text>
+					<text style="font-size: 35rpx; font-weight: 600;">比分</text>
+				</view>
+			</view>
+			<view class="gamebox">
+				<view style="display: flex;flex-direction: row;">
+					<view class="left" style="flex: 1;display: flex;flex-direction: column;">
+						<view :class="index==1?'red':index==2?'blue':'red'" v-for="index in 3" :key="index"
+							style="color: #fff;display: flex;">
+							<text style="align-self:center;">{{index==1?'胜':index==2?'平':'负'}}</text>
+						</view>
+					</view>
+					<view class="right" style="flex: 19;">
+						<view class="box">
+							<view class="box" v-if="noshowgame(2,'bf')"
+								style="flex-wrap: wrap;">
+								<view class="check" v-for="item,index in props.styledata.value.bf.res"
+									:key="index" style="height: 75rpx;"
+									:style="(props.styledata.value.bf.style[index]==0?'':' background-color: red; color: #fff;') +''+ (index==12 || index==17 || index==30?'flex:100%;':'flex:25%;')"
+									@click="change('bf',index,2)">
+									<view class="huadan">
+										<text style="font-weight: 700;">{{item}}</text>
+										<view style="display: flex;flex-direction: row;">
+											<text style="margin-left: 5px; font-weight: 700;">
+												{{props.fixSelectData.bf[index]}}
+											</text>
+										</view>
+									</view>
+								</view>
+							</view>
+							<view v-else class="check" style="flex: 1;height: 750rpx;">
+								<view style="color: #999999;">
+									未开售
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			
+			<view class="title"><!-- 总进球 -->
+				<view style="margin-top: 10rpx;">
+					<text v-show="noshowdan(3)" class="dan_lable">单</text>
+					<text style="font-size: 35rpx; font-weight: 600;">总进球</text>
+				</view>
+			</view>
+			<view class="gamebox">
+				<view class="box">
+					<view class="box" v-if="noshowgame(3,'jq')" style="flex-wrap: wrap;">
+						<view class="check" v-for="item,index in props.styledata.value.jq.res" :key="index"
+							style="height: 75rpx;flex: 25%;"
+							:style="props.styledata.value.jq.style[index]==0?'':' background-color: red; color: #fff;'"
+							@click="change('jq',index,3)">
+							<view class="huadan">
+								<text style="font-weight: 700;">{{item}}</text>
+								<view style="display: flex;flex-direction: row;">
+									<text style="margin-left: 5px; font-weight: 700;">
+											{{props.fixSelectData.jq[index]}}
+										</text>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view v-else class="check" style="flex: 1;height: 150rpx;">
+						<view style="color: #999999;">
+							未开售
+						</view>
+					</view>
+				</view>
+			</view>
+			
+			<view class="title"><!-- 半全场 -->
+				<view style="margin-top: 10rpx;">
+					<text v-show="noshowdan(4)" class="dan_lable">单</text>
+					<text style="font-size: 35rpx; font-weight: 600;">半全场</text>
+				</view>
+			</view>
+			<view class="gamebox">
+				<view class="box">
+					<view class="box" v-if="noshowgame(4,'bqc')" style="flex-wrap: wrap;">
+						<view class="check" v-for="item,index in props.styledata.value.bqc.res" :key="index"
+							style="height: 75rpx;flex: 33%;"
+							:style="props.styledata.value.bqc.style[index]==0?'':' background-color: red; color: #fff;'"
+							@click="change('bqc',index,4)">
+							<view class="huadan">
+								<text style="font-weight: 700;">{{item}}</text>
+								<view style="display: flex;flex-direction: row;">
+									<text style="margin-left: 5px; font-weight: 700;">
+										{{props.fixSelectData.bqc[index]}}
+									</text>
+								</view>
+							</view>
+						</view>
+					</view>
+					<view v-else class="check" style="flex: 1;height: 225rpx;">
+						<view style="color: #999999;">
+							未开售
+						</view>
+					</view>
+				</view>
+			</view>
+			<view style="width:100%;height:20rpx;"></view>
+		</scroll-view>
+		<!-- 底部按钮 -->
+		<view class="Buttongroup" style="">
+			<view class="cancel button" style="flex: 1;background-color: #FFFFFF;" @click="cancel">
+				<text>关闭</text>
+			</view>
+			<view class="confirm button" style="flex: 1; background-color: #202736; color: #ffffff;"
+				@click="confirm">
+				<text style="">确认</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script setup>
+	import {
+		onBeforeMount,
+		defineEmits,
+		defineProps,
+		reactive,
+		watch,
+		getCurrentInstance,
+		ref
+	} from "vue"
+
+	const props = defineProps(['styledata', 'fixSelectData'])
+	const emits = defineEmits(['closeupup', 'getfixSelectData'])
+
+	const scrollTop = ref(0)
+
+	const change = (type,index,gameId) => {
+		emits('getfixSelectData',type,index,gameId)
+	}
+
+	const cancel = () => {
+		emits('closeupup')
+	}
+
+	const confirm = () => {
+		emits('closeupup')
+	}
+
+
+	const noshowdan = (id) => {
+		var res = props.fixSelectData.sell_status[id];
+		if(res=='2' || id==2 || id==3 || id==4){
+			return true
+		}else{
+			return false
+		}
+	}
+	
+	const noshowgame = (id,gameType) => {
+		var res = props.fixSelectData.sell_status[id];
+		if (res=='1'|| res=='2' || props.fixSelectData[gameType].length>1 || props.fixSelectData[gameType]['goalLine']) {
+			return true
+		} else {
+			return false
+		}
+	}
+</script>
+
+<style lang="scss">
+	.dan_lable{
+		font-size: 35rpx;
+		font-weight: 600;
+		background-color: #ff0000;
+		color: #FFFFFF;
+		padding:10rpx 5rpx;
+		border-radius:5rpx;
+	}
+	.left .red {
+		background-color: red;
+		height: 300rpx;
+	}
+	.left .blue {
+		background-color: #2979FF;
+		height: 150rpx;
+	}
+
+	.inner-box1 text {
+		position: absolute;
+		left: 25%;
+		bottom: -2px;
+		color: #fff;
+		transform: translateX(-50%);
+	}
+
+	.inner-box1 {
+
+		width: 50%;
+		height: 50%;
+		background-color: red;
+		transform: rotate(-45deg);
+		position: absolute;
+		left: -15%;
+		top: -15%;
+	}
+
+	.huadan {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+		width: 100%;
+		height: 100%;
+		/* background-color: orange;   */
+		overflow: hidden;
+	}
+
+
+	.title .red {
+		font-size: 35rpx;
+		font-weight: 600;
+		color: red;
+	}
+
+	.title .green {
+		font-size: 35rpx;
+		font-weight: 600;
+		color: green;
+	}
+
+	.Buttongroup .button {
+		height: 100%;
+		width: 100%;
+
+		font-size: 30rpx;
+		text-align: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		/* 边框 */
+		border-top: 1rpx solid #edf0f3;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	.Buttongroup text {
+		font-size: 35rpx;
+		font-weight: 600;
+
+
+
+	}
+
+	.Buttongroup {
+		width: 100%;
+		height: 120rpx;
+		display: flex;
+		flex-direction: row;
+
+	}
+
+	.left {
+		/*设置为伸缩容器*/
+
+		display: -webkit-box;
+
+		display: -moz-box;
+
+		display: -ms-flexbox;
+
+		display: -webkit-flex;
+
+		display: flex;
+
+		/*垂直居中*/
+
+		-webkit-box-align: center;
+		/*旧版本*/
+
+		-moz-box-align: center;
+		/*旧版本*/
+
+		-ms-flex-align: center;
+		/*混合版本*/
+
+		-webkit-align-items: center;
+		/*新版本*/
+
+		align-items: center;
+		/*新版本*/
+	}
+
+	.check {
+		flex: 1;
+
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+
+		/* 边框 */
+		border: 3rpx solid #edf0f3;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	.box {
+		width: 100%;
+		display: flex;
+		flex-direction: row;
+		text-align: center;
+	}
+
+	text {
+		margin: 1px;
+		font-size: 26rpx;
+
+		text-align: center;
+	}
+	.gamebox {
+		margin-top:10rpx;
+		display: flex;
+		flex-direction: column;
+	}
+	.yc-data-checkbox {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.title .box {
+		text-align: center;
+		background-color: #2979FF;
+		margin: 20rpx;
+		height: 100%;
+
+	}
+	.title{
+		width: 100%;
+		display: flex;
+		align-items: center;
+		padding:30rpx 10rpx 10rpx 0;
+	}
+	.suspensionbox {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.scroll-Y{
+		padding-bottom:120rpx; 
+		max-height:60vh;
+		padding:0rpx 10rpx;
+		box-sizing: border-box;
+	}
+
+</style>

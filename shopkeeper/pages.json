@@ -1,0 +1,576 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	{
+		"path" : "pages/guidepage",
+		"style" : 
+		{
+			"navigationBarTitleText" : ""
+		}
+	},
+		{
+			"path" : "pages/initPage",
+			"style" :                                                                                    
+			{
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+			
+		},
+		{
+		    "path" : "pages/index/mine",//'我的'页面
+		    "style" :                                                                                    
+		    {
+		        "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+		    }
+		    
+		},
+		{
+		    "path" : "pages/index/userPages",//用户页面
+		    "style" :                                                                                    
+		    {
+		        "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+		    }
+		    
+		},
+		{
+			"path": "pages/index/index",//订单页面
+			"style": {
+				"enablePullDownRefresh" : false,
+				"navigationBarTextStyle": "black"
+			}
+		},
+		{
+			"path" : "pages/login/login",//登录页面
+			"style" :{
+				"enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+			}
+			
+		}
+        ,{
+            "path" : "pages/index/statistics",//统计页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+		,{
+		    "path" : "pages/statistics-xiangqing/statistics-award", //统计-派奖详情
+		    "style" :                                                                                    
+		    {
+		        "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+		    }
+		}
+		,{
+		    "path" : "pages/statistics-xiangqing/statistics-Pay", //统计-充值总金额
+		    "style" :                                                                                    
+		    {
+		        "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+		    }
+		}
+		,{
+		    "path" : "pages/statistics-xiangqing/statistics-history", // 统计-提现总金额
+		    "style" :                                                                                    
+		    {
+		        "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+		    }
+		    
+		}
+		,{
+		    "path" : "pages/statistics-xiangqing/statistics-statisticsTwo", //统计的统计页面..
+		    "style" :                                                                                    
+		    {
+		        "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/mimeSupPage/setPage",//设置页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/orderInquiry",//订单记录
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/daiPaiJianPage",//带派奖页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/tixianshenqin",//提现申请页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/userUupPage/userUupPage",//用户信息页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/userUupPage/allUserPage",//全部用户页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/yuangongguanli",//员工管理页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/dianpu",//合作店铺页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/dianpuSupPage/dianpuSupPage",//店铺-店铺详细
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/dianpuSupPage/applicationPage",//店铺-合作申请页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/dianpuSupPage/historyPage",//店铺-历史记录
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/receipt", // 我的-收款管理
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/CategoryManagement", // 我的-彩种管理
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/userUupPage/userSupPageSup/userSupPageSup",//账号明细
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/userUupPage/userSupPageSup/userTouzu",//用户界面/下单记录
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/receiptSupPage/receiptSupPage",//提现认证页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/balancePage/balancePage",//账户余额页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/escrowAccountPage",//托管账号余额页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/indexSupPages/indexSupPages",//订单详情页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "white"
+            }
+            
+        }
+        ,{
+            "path" : "pages/userUupPage/userInvitePage",//用户邀请页面（用户详情/他的邀请）
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/balancePage/rechargePage",//充值页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/yuangongguanliSupPage/yuangongguanliSupPage",//员工彩种管理页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/dianpuSupPage/addShop/addShop",//添加合作店铺页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/dianpuSupPage/addGameState/addGameState",//添加合作玩法页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/yuangongguanliSupPage/addYuangong",//我的页面的添加员工页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/statistics-xiangqing/statisyics-award-contentPage",//统计页面出票记录和派奖记录
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/attestation/shopArresrarion",//设置页面的店铺认证
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/balancePage/shopParticulars/shopParticulars",//店铺/充值的账户明显
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/dianpuSupPage/shopDetail/shopDetail",//合作余额明细
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/shareCanvas/shareCanvas",//店铺分享页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/balancePage/drawMoney/drawMoney",//我的/充值/提现
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/balancePage/drawMoney/drawMoneyRecord",//店铺余额/提现/提现记录页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/indexSupPages/orderSplitting",
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/redPacket",
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/login/register",//注册页面
+            "style" :                                                                                    
+            {
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/login/forgetThePassword",//修改密码/忘记密码
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        
+        ,{
+            "path" : "pages/statistics-xiangqing/statistics-Pay-item",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/chatRoom",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationBarTextStyle": "black"
+            }
+            
+        }
+        ,{
+            "path" : "pages/chat_itemPage/user_chat",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/mimeSupPage/announcement_set",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+        {
+        	"path" : "pages/mimeSupPage/goflychat",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : "在线客服",
+        		"enablePullDownRefresh" : false
+        	}
+        },
+        {
+        	"path" : "pages/index/useragencia",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : "代理统计",
+				"enablePullDownRefresh" : false
+        	}
+        },
+        {
+        	"path" : "pages/index/datosdelagente",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : ""
+        	}
+        },
+        {
+        	"path" : "pages/userUupPage/userinformation/userinformation",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : ""
+        	}
+        },
+        {
+        	"path" : "pages/userUupPage/dailiuser/dailiuser",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : ""
+        	}
+        },
+        {
+        	"path" : "pages/userUupPage/InviteShopkeeper",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : ""
+        	}
+        },
+        {
+        	"path" : "pages/mimeSupPage/attestation/video",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : ""
+        	}
+        },
+        {
+        	"path" : "pages/robotpage/robotpage",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : ""
+        	}
+        },
+        {
+        	"path" : "pages/robotpage/robotdetails",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : ""
+        	}
+        }
+    ],
+	"tabBar": {//底部导航tab（样式以及数据）
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "订单",
+				"iconPath": "/static/icon/Tabicon/dindanblack.png",
+				"selectedIconPath":"/static/icon/Tabicon/dindanyellow.png"
+				
+			},
+			{
+				"pagePath":"pages/index/userPages",
+				"text": "用户",
+				"iconPath": "/static/icon/Tabicon/yonghu_black.png",
+				"selectedIconPath": "/static/icon/Tabicon/yonghu_yellow.png"
+				
+			},
+			{
+				"pagePath": "pages/index/statistics",
+				"text": "统计",
+				"iconPath": "/static/icon/Tabicon/tongji_black.png",
+				"selectedIconPath": "/static/icon/Tabicon/tongji_yellow.png"
+			},
+			// {
+			// 	"pagePath": "pages/index/chatRoom",
+			// 	"text": "信息",
+			// 	"iconPath": "/static/icon/Tabicon/chat.png",
+			// 	"selectedIconPath": "/static/icon/Tabicon/chat_yellow.png"
+			// },
+			{
+				"pagePath": "pages/index/useragencia",
+				"text": "代理",
+				"iconPath": "/static/icon/Tabicon/chat.png",
+				"selectedIconPath": "/static/icon/Tabicon/chat_yellow.png"
+			},
+			{
+				"pagePath": "pages/index/mine",
+				"text": "我的",
+				"iconPath": "/static/icon/Tabicon/wode_black.png",
+				"selectedIconPath": "/static/icon/Tabicon/wode_yellow.png"
+		
+			}
+		],
+		"color": "#000",
+		"selectedColor": "#FDC830",
+		"borderStyle": "white"
+	},
+	"globalStyle": {//导航栏样式（已取消）
+		"navigationStyle": "custom",//取消导航条
+		"navigationBarTitleText": "店主员工登录"
+	}
+
+}
