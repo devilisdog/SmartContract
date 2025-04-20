@@ -70,6 +70,11 @@
 						<text>{{counter.Betrecord.Win_a_prize}}</text>
 						<text>已中奖</text>
 					</view>
+					<view class="content_itme" :style="counter.Betrecord.Win_a_prize>0?'color:red;':''"
+						@click="screenPage(7)">
+						<text>{{counter.Betrecord.Win_a_prize}}</text>
+						<text>待接单</text>
+					</view>
 				</view>
 			</view>
 			<!-- <view class="wallet_card">
@@ -871,8 +876,8 @@
 			}
 
 			.img {
-				width: 70rpx;
-				height: 70rpx;
+				width: 50rpx;
+				height: 50rpx;
 			}
 
 			.img_right {
@@ -881,26 +886,26 @@
 			}
 		}
 
-		.list:nth-child(1) {
-			.img {
-				width: 60rpx;
-				height: 60rpx;
-			}
-		}
+		// .list:nth-child(1) {
+		// 	.img {
+		// 		width: 60rpx;
+		// 		height: 60rpx;
+		// 	}
+		// }
 
-		.list:nth-child(2) {
-			.img {
-				width: 55rpx;
-				height: 55rpx;
-			}
-		}
+		// .list:nth-child(2) {
+		// 	.img {
+		// 		width: 55rpx;
+		// 		height: 55rpx;
+		// 	}
+		// }
 
-		.list:nth-child(3) {
-			.img {
-				width: 55rpx;
-				height: 55rpx;
-			}
-		}
+		// .list:nth-child(3) {
+		// 	.img {
+		// 		width: 55rpx;
+		// 		height: 55rpx;
+		// 	}
+		// }
 
 	}
 

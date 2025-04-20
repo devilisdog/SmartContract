@@ -1,15 +1,10 @@
 <template>
-	<view class="statusBar"></view>
-	<view class="uni_mySet_ber">
-		<view class="ber_left"><uni-icons type="back" size="38rpx" @click="back"></uni-icons></view>
-		<view class="ber_mddel">{{titleText}}</view>
-		<view class="ber_rigth"><uni-icons type="trash" size="38rpx" @click="isOpenDialog=true"></uni-icons></view>
-	</view>
 	<scroll-view :scroll-y="true" class="scroll-view_style" :scroll-with-animation="scroll_isAmin" :scroll-into-view="scroll_view_showId" upper-threshold="100" @scrolltoupper="loadingData" :style="{height:Scroll_heigth+'px'}">
 		<uni-load-more :status="loadingStates"></uni-load-more>
 		<view v-for="itme,index in ShowData" :key="itme.id" :id="'item'+itme.createtime">
 			<view class="pop_up" v-if="ShowData[index-1] && getTimeDifferenceInMinutes(ShowData[index-1].createtime,itme.createtime)>5">{{dateShowStyle(itme.createtime)}}</view>
-			<view class="chat_box_my_image_rigth" v-if="itme.from == counter.user_id && itme.chat_type=='image'"><!-- 我 -->
+			<view class="chat_box_my_image_rigth" v-if="itme.from == counter.user_id && itme.chat_type=='image'">
+                <!-- 我 -->
 				<image 
 					:src="itme.content" 
 					class="contnet_image"  
@@ -32,6 +27,35 @@
 					</image>
 				</view>
 			</view>
+			<!-- 红包消息 - 我发的 -->
+			<view class="chat_box_my" v-else-if="itme.from == counter.user_id && itme.chat_type=='redpacket'">
+				<view class="chat_redpacket_box" @click="openRedPacketDetail(itme)" @longpress="longpressSet(itme,index)">
+					<view class="redpacket_top">
+						<image src="/static/img/redpacket_icon.png" class="redpacket_icon"></image>
+						<text class="redpacket_text">恭喜发财，大吉大利</text>
+					</view>
+					<view class="redpacket_bottom">
+						<text>红包</text>
+					</view>
+				</view>
+				<image :src="counter.user_imgs" class="logo_style" lazy-load :lazy-load-margin="0"></image>
+			</view>
+			<!-- 红包消息 - 别人发的 -->
+			<view class="chat_box_shop" v-else-if="itme.from != counter.user_id && itme.chat_type=='redpacket'">
+				<image :src="itme.user_log" class="logo_style" />
+				<view class="left_chat">
+					<text class="user_name">{{itme.user_name}}</text>
+					<view class="chat_redpacket_box shop_redpacket" @click="openRedPacketDetail(itme)" @longpress="longpressSet(itme,index)">
+						<view class="redpacket_top">
+							<image src="/static/img/redpacket_icon.png" class="redpacket_icon"></image>
+							<text class="redpacket_text">恭喜发财，大吉大利</text>
+						</view>
+						<view class="redpacket_bottom">
+							<text>红包</text>
+						</view>
+					</view>
+				</view>
+			</view>
 			<view class="pop_up" v-else-if="itme.chat_type=='hint'">{{itme.content}}</view>
 			<view class="chat_box_my"  v-else-if="itme.from == counter.user_id" >
 				<!-- 我 -->
@@ -52,7 +76,7 @@
 				</view>
 			</view>
 		</view>
-		<view style="width:100%;height:20rpx;"></view>
+		<!-- <view style="width:100%;height:20rpx;"></view> -->
 	</scroll-view>
 	<view class="bottm_from" :style="{bottom:inputLoc+'px'}">
 		<input :adjust-position="false" v-model="myChatContent" @keyboardheightchange="clickInput" class="inputStyle"/>
@@ -117,14 +141,47 @@
 			</view>
 		</view>
 	</uni-popup>
+	
+	<!-- 红包详情弹窗 -->
+	<uni-popup ref="redPacketDetailPopup" type="center" :mask-click="true">
+		<view class="redpacket-detail-box">
+			<view class="redpacket-detail-header">
+				<image src="/static/img/redpacket_bg.png" class="redpacket-detail-bg"></image>
+				<view class="redpacket-detail-avatar">
+					<image :src="currentRedPacket.user_log || counter.user_imgs" class="redpacket-avatar"></image>
+				</view>
+				<view class="redpacket-detail-username">
+					<text>{{ currentRedPacket.user_name }}</text>
+				</view>
+				<view class="redpacket-detail-msg">
+					<text>恭喜发财，大吉大利</text>
+				</view>
+			</view>
+			<view class="redpacket-detail-content">
+				<view class="redpacket-detail-amount">
+					<text class="amount-symbol">¥</text>
+					<text class="amount-value">{{ currentRedPacket.redPacketInfo?.amount || '0.00' }}</text>
+				</view>
+				<view class="redpacket-detail-info">
+					<text>已领取红包</text>
+				</view>
+				<view class="redpacket-detail-time">
+					<text>红包总金额{{ currentRedPacket.redPacketInfo?.totalAmount || '0.00' }}元，共{{ currentRedPacket.redPacketInfo?.count || 1 }}个红包</text>
+				</view>
+			</view>
+			<view class="redpacket-detail-close" @click="closeRedPacketDetail">
+				<uni-icons type="closeempty" size="24" color="#fff"></uni-icons>
+			</view>
+		</view>
+	</uni-popup>
 </template>
 
 <script setup>
-	import {onBeforeMount,ref,reactive,getCurrentInstance,defineProps,watch,nextTick,computed} from 'vue';
+	import {onBeforeMount,ref,reactive,getCurrentInstance,defineProps,watch,nextTick,computed,onMounted} from 'vue';
 	import { useCounterStore } from '@/stores/counter'// 状态管理
 	import {onShow,onBackPress} from "@dcloudio/uni-app"
 	import api from "@/common/vmeitime-http/index.js"
-	const Props=defineProps(['shop_id','chatType'])
+	const Props=defineProps(['shop_id','chatType','parentHeight'])
 	const counter = useCounterStore();
 	// 参数
 	const {proxy,ctx} = getCurrentInstance()
@@ -185,7 +242,43 @@
 		
 		const eachAmount = (amount / count).toFixed(2)
 		
-		// 在这里可以添加发送红包的逻辑
+		// 构建红包信息对象
+		const redPacketInfo = {
+			totalAmount: amount,
+			count: count,
+			eachAmount: eachAmount,
+			receivedCount: 0,
+			createdTime: new Date().getTime()
+		}
+		
+		// 发送红包消息（在实际应用中，这里应该调用后端API）
+		const nowTime = Number(new Date().getTime()/1000).toFixed(0)
+		const redPacketMessage = {
+			id: 'redpacket_' + nowTime,
+			content: '红包',
+			createtime: nowTime,
+			from: counter.user_id,
+			chat_type: 'redpacket',
+			user_log: counter.user_imgs,
+			user_name: counter.nickname,
+			redPacketInfo: redPacketInfo
+		}
+		
+		// 添加到消息列表
+		ShowData.push(redPacketMessage)
+		
+		// 如果在真实应用中，这里应该通过WebSocket发送消息
+		// 在这里模拟WebSocket发送
+		var socketPost = {
+			'type': Props.chatType,
+			'from': counter.user_id,
+			'to': Props.chatType == 'public' ? '' : Props.shop_id,
+			'content': JSON.stringify(redPacketInfo),
+			'chat_type': 'redpacket',
+			'user_info': {'user_logo': counter.user_imgs, 'user_name': counter.nickname}
+		}
+		
+		// 模拟发送成功
 		uni.showToast({
 			title: `成功发送总额为${amount}元的${count}个红包`,
 			icon: 'none'
@@ -193,6 +286,9 @@
 		
 		// 关闭红包弹窗
 		proxy.$refs.redPacketPopup.close()
+		
+		// 滚动到底部
+		returnBottom(true)
 		
 		// 清空输入
 		redPacketAmount.value = ''
@@ -213,30 +309,134 @@
 	*/
 	const pageQuantity=ref(20)//每页聊天数量
 	onShow(()=>{// 页面显示触发
-		titleText.value=Props.chatType=='private'?'私聊店主('+Props.shop_id+')':Props.shop_id+'店铺群聊'
 		readData()
 		setScroll_heigth(false)
 	})
-	const setScroll_heigth=(boole)=>{//获取滚动区域高度
-		var myTopber=0
-		var buttom_heigth=0
-		nextTick(()=>{
-			uni.createSelectorQuery().select('.uni_mySet_ber').boundingClientRect((data)=>{
-				myTopber=data.height
-				uni.createSelectorQuery().select('.bottm_from').boundingClientRect((data)=>{
-					buttom_heigth=data.height
-					calculate()
-				}).exec()
-			}).exec()
-		})
-		function calculate(){
-			var allHeigth=uni.getSystemInfoSync().windowHeight//页面总高度
-			var statesHeigth=uni.getSystemInfoSync().statusBarHeight//app状态栏高度
-			Scroll_heigth.value=allHeigth-statesHeigth-myTopber-buttom_heigth-inputLoc.value
-			nextTick(()=>{
-				returnBottom(boole)
+	
+	// 用于解析高度值，支持vh、px等单位
+	const parseHeight = async (height) => {
+		console.log('解析高度:', height, typeof height)
+		
+		// 创建一个Promise来获取底部输入框的高度
+		const getBottomHeight = () => {
+			return new Promise((resolve) => {
+				setTimeout(() => {
+					const query = uni.createSelectorQuery().in(proxy)
+					query.select('.bottm_from').boundingClientRect(data => {
+						if (data) {
+							console.log('底部输入框高度(detail):', data)
+							resolve(data.height || BOTTOM_FROM_HEIGHT) // 如果获取失败，使用默认值
+						} else {
+							console.log('未找到底部输入框元素')
+							resolve(BOTTOM_FROM_HEIGHT) // 默认值
+						}
+					}).exec()
+				}, 100) // 给足够的时间让DOM渲染
 			})
 		}
+		
+		// 获取底部高度
+		const bottomHeight = await getBottomHeight()
+		console.log('成功获取底部输入框高度:', bottomHeight)
+		
+		// 根据不同类型的高度值进行处理
+		if (typeof height === 'number') {
+			return height - inputLoc.value - bottomHeight
+		}
+		
+		// 处理字符串类型的高度，例如'63vh'
+		if (typeof height === 'string') {
+			if (height.includes('vh')) {
+				// 将vh转换为像素
+				const vh = parseFloat(height)
+				const windowHeight = uni.getSystemInfoSync().windowHeight
+				console.log('窗口高度:', windowHeight, 'vh值:', vh, '计算结果:', (windowHeight * vh / 100) - inputLoc.value - bottomHeight)
+				return (windowHeight * vh / 100) - inputLoc.value - bottomHeight
+			} else if (height.includes('px')) {
+				// 处理px单位
+				return parseFloat(height) - inputLoc.value - bottomHeight
+			} else {
+				// 处理纯数字字符串
+				return parseFloat(height) - inputLoc.value - bottomHeight
+			}
+		}
+		
+		return 0
+	}
+	
+	// 监听父组件传入的高度
+	watch(() => Props.parentHeight, async (newHeight) => {
+		console.log('父组件高度变化:', newHeight)
+		if (newHeight) {
+			// 处理vh单位等情况
+			const calculatedHeight = await parseHeight(newHeight)
+			console.log('计算后的高度:', calculatedHeight)
+			Scroll_heigth.value = calculatedHeight
+			nextTick(() => {
+				returnBottom(true)
+			})
+		}
+	}, { immediate: true })
+
+	onMounted(async () => {
+		console.log('组件挂载，父高度:', Props.parentHeight)
+		if (Props.parentHeight) {
+			// 等待一段时间确保组件完全渲染
+			setTimeout(async () => {
+				const calculatedHeight = await parseHeight(Props.parentHeight)
+				console.log('组件挂载时计算的高度:', calculatedHeight)
+				Scroll_heigth.value = calculatedHeight
+				nextTick(() => {
+					returnBottom(true)
+				})
+			}, 300) // 给予足够的时间渲染
+		}
+	})
+	
+	// 直接设置一个底部输入框高度的常量，以防获取失败
+	const BOTTOM_FROM_HEIGHT = 56 // 预估的底部输入框高度，单位px
+
+	const setScroll_heigth = async (boole) =>{//获取滚动区域高度
+		if (Props.parentHeight) {
+			// 如果父组件传了高度，直接使用解析函数处理
+			const calculatedHeight = await parseHeight(Props.parentHeight)
+			Scroll_heigth.value = calculatedHeight
+			nextTick(() => {
+				returnBottom(boole)
+			})
+			return
+		}
+		
+		// 否则使用自己的计算方法
+		var myTopber = 0
+		var buttom_heigth = 0
+		
+		// 创建Promise获取高度
+		const getElementsHeight = () => {
+			return new Promise((resolve) => {
+				const query = uni.createSelectorQuery().in(proxy)
+				query.select('.uni_mySet_ber').boundingClientRect(data => {
+					if(data) myTopber = data.height || 0
+					query.select('.bottm_from').boundingClientRect(data => {
+						if(data) buttom_heigth = data.height || BOTTOM_FROM_HEIGHT
+						resolve({ myTopber, buttom_heigth })
+					}).exec()
+				}).exec()
+			})
+		}
+		
+		// 获取元素高度
+		const { myTopber: topHeight, buttom_heigth: bottomHeight } = await getElementsHeight()
+		console.log('顶部高度:', topHeight, '底部高度:', bottomHeight)
+		
+		// 计算
+		var allHeigth = uni.getSystemInfoSync().windowHeight//页面总高度
+		var statesHeigth = uni.getSystemInfoSync().statusBarHeight//app状态栏高度
+		Scroll_heigth.value = allHeigth - statesHeigth - topHeight - bottomHeight - inputLoc.value
+		console.log('计算出的滚动区域高度:', Scroll_heigth.value)
+		nextTick(() => {
+			returnBottom(boole)
+		})
 	}
 	const checkImage=(imageArr)=>{//图片预览
 		uni.previewImage({
@@ -300,13 +500,13 @@
 	}
 	
 	watch(()=>counter.chatPageExecute_user,(newV,odlV)=>{
-		if(newV.type==='push' && newV.info.type==Props.chatType){//添加
-			ShowData.push(newV.info)
-			returnBottom(true)
-		}
-		if(newV.type==='hint'){//撤回
-			// console.log('hint',newV);
-		}
+		// if(newV.type==='push' && newV.info.type==Props.chatType){//添加
+		// 	ShowData.push(newV.info)
+		// 	returnBottom(true)
+		// }
+		// if(newV.type==='hint'){//撤回
+		// 	// console.log('hint',newV);
+		// }
 	})
 	const last_id=ref(0)//上次加载前头部的id
 	const loadingData=()=>{//下拉触发加载更多聊天记录
@@ -509,6 +709,35 @@
 	const openMoreFunc = () => {
 		proxy.$refs.moreFunc.open()
 	}
+	
+	// 新增当前红包数据的响应式引用
+	const currentRedPacket = reactive({
+		user_name: '',
+		user_log: '',
+		redPacketInfo: null
+	});
+	
+	// 新增红包详情弹窗引用
+	const redPacketDetailPopup = ref(null);
+	
+	// 打开红包详情
+	const openRedPacketDetail = (redPacket) => {
+		console.log('打开红包详情:', redPacket)
+		// 设置当前红包数据
+		currentRedPacket.user_name = redPacket.user_name
+		currentRedPacket.user_log = redPacket.user_log
+		currentRedPacket.redPacketInfo = redPacket.redPacketInfo
+		
+		// 如果是真实应用，这里应该调用后端API获取红包领取状态
+		
+		// 打开红包详情弹窗
+		proxy.$refs.redPacketDetailPopup.open()
+	}
+	
+	// 关闭红包详情
+	const closeRedPacketDetail = () => {
+		proxy.$refs.redPacketDetailPopup.close()
+	}
 </script>
 
 <style lang="scss">
@@ -578,7 +807,8 @@
 	}
 	.scroll-view_style{
 		width:100%;
-		height:calc(100vh - 100rpx - 100rpx - 20rpx);
+		// height:calc(100vh - 100rpx - 100rpx - 20rpx);
+        height:63vh;
 		box-sizing: border-box;
 		transition: all 0.3s;
 	}
@@ -853,5 +1083,173 @@
 				font-weight: bold;
 			}
 		}
+	}
+	
+	// 添加红包样式
+	.chat_redpacket_box {
+		background: linear-gradient(135deg, #ff4b2b, #ff0000);
+		width: 400rpx;
+		height: 180rpx;
+		border-radius: 10rpx;
+		margin-right: 20rpx;
+		overflow: hidden;
+		position: relative;
+		box-shadow: 0 4rpx 10rpx rgba(255, 0, 0, 0.2);
+		
+		.redpacket_top {
+			height: 120rpx;
+			padding: 20rpx;
+			display: flex;
+			align-items: center;
+			
+			.redpacket_icon {
+				width: 60rpx;
+				height: 60rpx;
+				margin-right: 20rpx;
+			}
+			
+			.redpacket_text {
+				color: #ffe9e0;
+				font-size: 28rpx;
+				font-weight: bold;
+				text-shadow: 0 1rpx 3rpx rgba(0, 0, 0, 0.1);
+			}
+		}
+		
+		.redpacket_bottom {
+			height: 60rpx;
+			background-color: #ff2200;
+			display: flex;
+			align-items: center;
+			padding: 0 20rpx;
+			
+			text {
+				color: #ffe0e0;
+				font-size: 24rpx;
+			}
+		}
+	}
+	
+	.shop_redpacket {
+		margin-left: 20rpx;
+		margin-right: 0;
+	}
+	
+	// 红包详情弹窗样式
+	.redpacket-detail-box {
+		width: 600rpx;
+		max-height: 800rpx;
+		background-color: #fff;
+		border-radius: 20rpx;
+		overflow: hidden;
+		position: relative;
+	}
+	
+	.redpacket-detail-header {
+		height: 300rpx;
+		background-color: #ff0000;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		
+		.redpacket-detail-bg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 0;
+		}
+		
+		.redpacket-detail-avatar {
+			z-index: 1;
+			margin-bottom: 20rpx;
+			
+			.redpacket-avatar {
+				width: 120rpx;
+				height: 120rpx;
+				border-radius: 60rpx;
+				border: 4rpx solid #ffe8e8;
+			}
+		}
+		
+		.redpacket-detail-username {
+			z-index: 1;
+			margin-bottom: 10rpx;
+			
+			text {
+				color: #fff;
+				font-size: 32rpx;
+				font-weight: bold;
+			}
+		}
+		
+		.redpacket-detail-msg {
+			z-index: 1;
+			
+			text {
+				color: #ffefbf;
+				font-size: 28rpx;
+			}
+		}
+	}
+	
+	.redpacket-detail-content {
+		padding: 40rpx;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		
+		.redpacket-detail-amount {
+			display: flex;
+			align-items: flex-end;
+			margin-bottom: 20rpx;
+			
+			.amount-symbol {
+				font-size: 40rpx;
+				color: #ff0000;
+				margin-right: 5rpx;
+				font-weight: bold;
+			}
+			
+			.amount-value {
+				font-size: 80rpx;
+				color: #ff0000;
+				font-weight: bold;
+				line-height: 1;
+			}
+		}
+		
+		.redpacket-detail-info {
+			margin-bottom: 20rpx;
+			
+			text {
+				font-size: 28rpx;
+				color: #666;
+			}
+		}
+		
+		.redpacket-detail-time {
+			text {
+				font-size: 24rpx;
+				color: #999;
+			}
+		}
+	}
+	
+	.redpacket-detail-close {
+		position: absolute;
+		bottom: -100rpx;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 80rpx;
+		height: 80rpx;
+		border-radius: 40rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(0, 0, 0, 0.3);
 	}
 </style>

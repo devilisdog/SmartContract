@@ -76,6 +76,10 @@
 		<intelligence @getData="getLeagueIntelligence()" :cardInfo="cardData.intelligenceData" :currentIndex="current" :myCurrent="3" :type='Props.gameType'></intelligence>
 	</scroll-view>
 	
+	<scroll-view scroll-y="true" v-show="current === 4" class="bottom_content_box">
+		<chatCard @getData="getLeagueIntelligence()" :cardInfo="cardData.intelligenceData" :currentIndex="current" :myCurrent="3" :type='Props.gameType' :parentHeight="'63vh'"></chatCard>
+	</scroll-view>
+	
 	<live :live_url='animation_live_src' v-if="isDom" ></live>
 	<videoLive v-if="video_show" :live_url_arr='video_live_url'></videoLive>
 	
@@ -88,7 +92,7 @@
 	import timeline from "@/components/chenbin-timeline/timelineItem.vue"
 	import {onBeforeMount,ref,reactive,defineProps,getCurrentInstance} from 'vue';
 	import {onHide,onUnload} from "@dcloudio/uni-app"
-	import scoreCard from "@/components/score/score_card.vue"
+	import chatCard from "@/components/score/chat_card.vue"
 	import historyCard from "@/components/score/historyInfo_card.vue"
 	import teamSatetCard from "@/components/score/TeamStatus_card.vue"
 	import live from "@/components/score/animation_live.nvue"
@@ -99,7 +103,7 @@
 	const {proxy,ctx} = getCurrentInstance()
 	const Props=defineProps(['info_id','gameType'])
 	const current=ref(0)//发段器默认选择
-	const items=reactive(['比赛分析','数据趋势','队伍状态','比赛情报'])
+	const items=reactive(['比赛分析','数据趋势','队伍状态','比赛情报','聊天'])
 	const pageData=reactive({
 		title:'起飞',//标题
 		awayTeamLogo:'',//客队头像
