@@ -24,19 +24,43 @@
 	</view>
 	<!-- 金额选择 -->
 	<uni-card :border="false" margin='20rpx' shadow='0px 5rpx 15rpx rgba(248, 248, 248, 1)' padding="5rpx">
-		<view style="padding: 20rpx 0;"><text style="color: #5e5e5e;font-size: 32rpx;">请选择充值金额</text></view>
+		<view style="padding: 20rpx 0;"><text style="color: #5e5e5e;font-size: 32rpx;">请选择充值金额</text>
+		<!-- 赠送金额提示 -->
+		<!-- 充值满100元 赠送6.88元   充值满200元 赠送16.66元  充值满500元 赠送 40.8元  充值1000 赠送88元  充值金额根据easyinputVal的值来判断 -->
+		<view class="gift-tip">
+			<view v-if="easyinputVal<100" style="color: #ffa3a3; font-weight: bold; font-size: 28rpx;">
+				<text>🎁 充值送礼，多冲多送</text>
+			</view>
+
+			<view v-if="easyinputVal >= 1000" style="color: #ff4c4c; font-weight: bold; font-size: 28rpx;">
+				<text>🎁 充值1000元 豪送88元 </text>
+			</view>
+			<view v-else-if="easyinputVal >= 500" style="color: #ff6b6b; font-weight: bold; font-size: 28rpx;">
+				<text>🎁 充值满500元 赠送40.8元 </text>
+			</view>
+			<view v-else-if="easyinputVal >= 200" style="color: #ff8787; font-weight: bold; font-size: 28rpx;">
+				<text>🎁 充值满200元 赠送16.66元 </text>
+			</view>
+			<view v-else-if="easyinputVal >= 100" style="color: #ffa3a3; font-weight: bold; font-size: 28rpx;">
+				<text>🎁 充值满100元 赠送6.88元 </text>
+			</view>
+		</view></view>
 		<view class="money-button">
 			<view v-for="item,index in moneyButton" :key="index" @click="buttonClick(item)"
 				:style="easyinputVal == item?'border: 1rpx solid #ff7979;':'border: 1rpx solid #ececec;'">
 				<text :style="easyinputVal == item?'color:#ff7979;':'color:#595959;'">￥{{item}}</text>
 			</view>
 		</view>
+		
 		<view
 			style="border: 3rpx solid #ececec;border-radius: 30rpx;width: 630rpx;margin: 20rpx auto;margin-left: 25rpx;padding: 10rpx 0;">
 			<uni-easyinput v-model="easyinputVal" type="digit" maxlength="6" placeholder="请输入充值金额" prefixIcon="wallet"
 				:inputBorder="false" placeholderStyle='font-size:28rpx;'>
 			</uni-easyinput>
 		</view>
+	
+		 
+		 
 	</uni-card>
 
 	<uni-card :border="false" margin='20rpx' shadow='0px 5rpx 15rpx rgba(248, 248, 248, 1)' padding="10rpx">
@@ -1109,6 +1133,12 @@
 		color: #fff;
 		padding: 0 40rpx;
 	}
+
+	.gift-tip {
+		margin: 20rpx auto;
+		width: 630rpx;
+	}
+	
 
 	/* 充值金额按钮 */
 	.money-button {
