@@ -1,0 +1,16 @@
+export default {
+    id: 'id',
+    name: 'name',
+    title: 'title',
+    rate: 'rate',
+    switch: 'switch',
+    'switch 0': 'switch 0',
+    'switch 1': 'switch 1',
+    memo: 'memo',
+    icon: 'icon',
+    model: 'model',
+    auth: 'auth',
+    'auth 0': 'auth 0',
+    'auth 1': 'auth 1',
+    'quick Search Fields': 'name,id',
+}

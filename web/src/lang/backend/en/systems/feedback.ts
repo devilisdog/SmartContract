@@ -1,0 +1,18 @@
+export default {
+    id: 'id',
+    status: 'status',
+    'status 0': 'status 0',
+    'status 1': 'status 1',
+    user_id: 'user_id',
+    type: 'type',
+    'type 0': 'type 0',
+    'type 1': 'type 1',
+    'type 2': 'type 2',
+    contact: 'contact',
+    describe: 'describe',
+    related_images: 'related_images',
+    returnData: 'returnData',
+    create_time: 'create_time',
+    update_time: 'update_time',
+    'quick Search Fields': 'user_id,contact,id',
+}

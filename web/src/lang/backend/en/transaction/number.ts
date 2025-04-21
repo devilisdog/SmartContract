@@ -1,0 +1,17 @@
+export default {
+    id: 'id',
+    user_id: 'user_id',
+    shop_id: 'shop_id',
+    type: 'type',
+    'type 0': 'type 0',
+    'type 1': 'type 1',
+    trade_num: 'trade_num',
+    source: 'source',
+    money: 'money',
+    OrderNumber: 'OrderNumber',
+    state: 'state',
+    'state 0': 'state 0',
+    'state 1': 'state 1',
+    'state 2': 'state 2',
+    'quick Search Fields': 'shop_id,user_id,id',
+}

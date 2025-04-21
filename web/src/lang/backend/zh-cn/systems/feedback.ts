@@ -1,0 +1,18 @@
+export default {
+    id: 'ID',
+    status: '状态',
+    'status 0': '待处理',
+    'status 1': '已处理',
+    user_id: '用户id',
+    type: '类型',
+    'type 0': '软件',
+    'type 1': '订单问题',
+    'type 2': '玩法问题',
+    contact: '联系方式',
+    describe: '富文本',
+    related_images: '相关图片',
+    returnData: '回复内容',
+    create_time: '创建时间',
+    update_time: '修改时间',
+    'quick Search Fields': 'ID、用户id、联系方式',
+}

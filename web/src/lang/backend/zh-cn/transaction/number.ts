@@ -1,0 +1,17 @@
+export default {
+    id: 'ID',
+    user_id: '用户id',
+    shop_id: '店主id',
+    type: '类型',
+    'type 0': '店主',
+    'type 1': '用户',
+    trade_num: '交易编号',
+    source: '来源',
+    money: '金额',
+    OrderNumber: '订单号',
+    state: '订单状态',
+    'state 0': '未支付',
+    'state 1': '已支付',
+    'state 2': '其他',
+    'quick Search Fields': 'ID、用户id、店主id',
+}

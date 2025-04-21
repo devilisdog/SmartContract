@@ -1,0 +1,269 @@
+<template>
+    <div class="content_body">
+        <div class="head_hello">
+            <!-- 头像 -->
+            <img class="UserAvatar" :src="adminInfo.avatar" />
+            <!-- 欢迎词 -->
+            <div class="Hello_content">
+                <p id="p_01">您好!{{ adminInfo.nickname + ' 👋' }}</p>
+                <p id="p_02">这些是您的统计数据, {{ time["year"] + '-' + time["month"] + '-' + time["day"] }}</p>
+            </div>
+        </div>
+
+        <!-- 第一层 -->
+        <div class="statistics" >
+            <div class="statistics_card" >
+                <card 
+                    v-for="item,index in Param.DataList" :key="index"
+                    :dataList = 'item'
+                    :chartType = 'getChartType(index)'
+                />
+                
+            </div>
+            <div class="statistics_card" >
+                
+                <workcard 
+                    v-for="item,index in Param.WorkList" :key="index"
+                    :dataList = 'item'
+                    :chartType = 'getChartType(index)'
+                />
+               
+            </div>
+        </div>
+        <!-- 第二层 -->
+        <div class="monitoring">
+            <!-- 服务器信息 -->
+            <sysCard class="sysCard"
+                :data = Param.sysDataList
+            />
+            
+            <div class="Lottery">
+                <DoughnutChart :data="Param.boardTableData" />
+                <el-table :data="Param.boardTableData" class="boardTable" :height='280'>
+                    <el-table-column prop="source" label="来源" align="left">
+                        <template #default="scope">
+                            <span :style="scope.row.source == '开奖失败' ? 'color:#e95656;': 'color:#505050;'">{{ scope.row.source }}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="value" label="值" align="right" />
+                    <el-table-column prop="percent" label="相较于其他" align="right">
+                        <template #default="scope">
+                            <span :style="scope.row.percent > 0 ? 'color:#e95656;' : scope.row.percent < 0 ? 'color:#75e06b;' : 'color:#b6b6b6;' ">{{ scope.row.percent }}</span>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+        </div>
+    </div>
+
+    
+</template>
+
+<script setup lang="ts">
+import { onBeforeMount,reactive,onBeforeUnmount } from "vue";
+import { getChartType } from '/@/components/kataer/card/card'
+/**
+ * 拿信息
+ */
+import { useAdminInfo } from '/@/stores/adminInfo'
+// 组件
+import card from '/@/components/kataer/card/index.vue'
+import workcard from '/@/components/kataer/card/work/index.vue'
+import sysCard from '/@/components/kataer/card/sysCard/index.vue'
+import DoughnutChart from '/@/components/kataer/card/DoughnutChart/index.vue'
+// 请求
+import { getStatisticalData,getWorkData,getSysData,getLotteryData } from '/@/api/backend/dashboard/index'
+import type { Param } from '/@/api/backend/dashboard/index'
+
+const adminInfo = useAdminInfo()
+//时间参数集
+const time = reactive({
+    'year'  : new Date().getFullYear(),
+    'month' : (new Date().getMonth() + 1).toString().padStart(2, '0'),
+    'day'   : new Date().getDate().toString().padStart(2, '0'),
+});
+
+const Param:Param = reactive({
+    'Statistical_timeOut' : null,
+    'DataList' : {},
+    'WorkList' : {},
+    'sysDataList' : {
+        'percent' : [0,0,0,0,0],
+        'title' :["CPU", "网络", "内存", "null"]
+    },
+    'boardTableData' : [
+        {'source' : "已开奖",'value':0,'percent':0,'type':'ykj','day':0},
+        {'source' : "待开奖",'value':0,'percent':0,'type':'wkj','day':0},
+        {'source' : "开奖失败",'value':0,'percent':0,'type':'error_kj','day':0},
+    ],
+})
+
+/**
+ * #声明周期
+ * onBeforeMount 组件创建
+ * onBeforeUnmount 组件被销毁
+ */
+onBeforeMount(()=>{
+    getStatistical();
+    getWorkDatalist();
+    getSystemData();
+    boardTableInit();
+    for (let index = 0; index < 4; index++) {
+        Param.DataList['test'+index] = {
+            'list' : [],
+            'newUserPercent' : 0,
+            'title' : 'title',
+            'type' : 'day',
+            'value' : 0,
+        }
+    }
+    Param.Statistical_timeOut = setInterval(() => {
+        getStatistical();
+        getWorkDatalist();
+        getSystemData();
+        boardTableInit();
+    },15000);
+});
+
+onBeforeUnmount(()=>{
+    clearInterval(Param.Statistical_timeOut);
+})
+
+// 获取统计数据请求
+const getStatistical = () =>{
+    getStatisticalData().then((res)=>{
+        Param.DataList = res.data;
+    }).catch((err)=>{
+        console.log('统计数据获取失败'+err);
+    })
+};
+
+// 获取统计数据请求
+const getWorkDatalist = () =>{
+    getWorkData().then((res)=>{
+        Param.WorkList = res.data;
+    }).catch((err)=>{
+        console.log('待办数据获取失败'+err);
+    })
+};
+
+// 获取系统数据
+const getSystemData = () =>{
+    getSysData().then((res)=>{
+        Param.sysDataList = res.data;
+    }).catch((err)=>{
+        console.log('系统数据获取失败'+err);
+    })
+};
+
+
+// 开奖监控 table 数据
+const boardTableInit = () =>{
+    getLotteryData().then((res)=>{
+        let arr = Array.from (res.data);
+        arr.forEach((item:any,index:any) => {
+            Param.boardTableData[0].forEach((Paramitem:any) => {
+                if(index == Paramitem['type'] ){
+                    Paramitem['value'] = item['week'];
+                    Paramitem['percent'] = item['percent'];
+                    Paramitem['day'] = item['day'];
+                }
+            });
+        });
+    }).catch((err)=>{
+        console.log('系统数据获取失败'+err);
+    })
+}
+
+</script>
+
+<style>
+:root{
+    --ba-bg-color : #f8fafd ;
+    --dashboard-box-shadow:0 0 5px 1px #cacaca38;
+}
+.content_body,.head_hello,.Hello_content
+{
+    display: flex;
+    align-items: center;
+}
+.content_body{
+    flex-direction: column;
+}
+
+/* 欢迎的头部 */
+.head_hello{
+    width: 100%;
+    background-color: #fafafa;
+    padding: 2em 4em;
+    box-shadow: var(--dashboard-box-shadow);
+}
+.UserAvatar{
+    width: 5.5em;
+    border-radius: 15%;
+    margin-right: 2em;
+}
+.Hello_content{
+    align-items: start;
+    flex-direction: column;    
+}
+#p_01{
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #505050;
+    padding-bottom: 0.6rem;
+}
+#p_02{
+    font-size: 1.1rem;
+    color: #9c9c9c;
+    letter-spacing: 1.5px;
+}
+
+/* 第一层 */
+.statistics,.monitoring{
+    width: 100%;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.statistics_card{
+    width: 46%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.5rem 0rem 1rem 1.5rem;
+    justify-content: space-around;
+}
+
+.monitoring{
+    padding: 2.8em 2.3em;
+    height: 460px;
+}
+.monitoring .sysCard{
+    width: 63%;
+    height: 100%;
+   
+    box-shadow: var(--dashboard-box-shadow);
+    
+}
+.monitoring .Lottery{
+    width: 34%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: var(--dashboard-box-shadow);
+    padding: 1em 2em ;
+    border-radius: 14px;
+}
+.monitoring .boardTable{
+    position: relative;
+    font-size: 0.8rem;
+}
+
+
+
+</style>
