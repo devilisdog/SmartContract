@@ -1526,8 +1526,46 @@ export const SendMessage = data => {
     })
 }
 
-// 默认全部导出  import api from '@/common/vmeitime-http/'
+//聊天-抢红包
+export const GetRedPacket = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/chat.room/grabPacket',
+        method: 'POST',
+        data,
+    })
+}
+
+//获取直播信息
+export const GetLiveInfo = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/chat.room/liveInfo',
+        method: 'GET',
+        data,
+    })
+}
+
 export default {
+    GetRedPacket,
     Login,
     GetMainInfo,
     GetUserInfo,
