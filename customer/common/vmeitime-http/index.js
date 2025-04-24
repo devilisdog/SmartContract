@@ -1558,13 +1558,14 @@ export const GetLiveInfo = data => {
     }
 
     return http.request({
-        url: '/api/chat.room/liveInfo',
+        url: '/api/chat.room/live',
         method: 'GET',
         data,
     })
 }
 
 export default {
+    GetLiveInfo,
     GetRedPacket,
     Login,
     GetMainInfo,

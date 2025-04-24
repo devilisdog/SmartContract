@@ -525,7 +525,7 @@ const checkImage = imageArr => {
 		imageArr: 'default',
 	})
 }
-const testImage = reactive([])
+
 const selectImage = () => {
 	//用户选择发送的图片
 	uni.chooseImage({
@@ -550,32 +550,22 @@ const selectImage = () => {
 	function upImage(upUrl, type) {
 		uni.showLoading({ title: '', mask: true })
 		var nowTime = new Date().getTime()
+		console.log(upUrl, 'upUrl')
 		uni.uploadFile({
-			url: counter.baseUrl + '/api/common.Common/upload2',
+			// url: counter.baseUrl + '/api/chat.room/upload',
+			url: 'http://47.92.233.116:8001/api/chat.room/upload',
 			header: { server: 1, 'ba-user-token': uni.getStorageSync('access_token') },
 			filePath: upUrl,
 			name: 'file',
-			formData: { type: 'worker', name: nowTime },
-			success(res) {
-				var newData = JSON.parse(res.data)
+			success: async (res) => {
+				const newData = JSON.parse(res.data)
 				if (isJSON(res.data) && newData.code == 1) {
-					var socketPost = {
-						type: Props.chatType,
-						from: counter.user_id,
-						to: Props.chatType == 'public' ? '' : Props.shop_id,
-						content: counter.baseUrl + newData.data.url,
-						user_info: {
-							avataro: counter.user_imgs,
-							username: counter.nickname,
-							showMode: type,
-						},
+					const params = {
+						type: 'image',
+						content: newData.data,
+						match_id: 2,
 					}
-					uni.sendSocketMessage({
-						data: JSON.stringify(socketPost),
-						fail(err) {
-							uni.showToast({ title: '信息发送失败~', icon: 'none' })
-						},
-					})
+					await api.SendMessage(params)
 				} else {
 					uni.showToast({ title: '图片上传失败~', icon: 'error' })
 				}
@@ -954,7 +944,9 @@ const sseStop = () => {
 
 .contnet_image {
 	margin: 0rpx 20rpx;
-	max-width: 550rpx;
+	max-width: 320rpx;
+	max-height: 200rpx;
+	border-radius: 10rpx;
 }
 
 .chat_box_my_image_left {
