@@ -79,8 +79,7 @@
 	</scroll-view>
 
 	<scroll-view scroll-y="true" v-show="current === 4" class="bottom_content_box">
-		<chatCard @getData="getLeagueIntelligence()" :cardInfo="cardData.intelligenceData" :currentIndex="current"
-			:myCurrent="3" :type='Props.gameType' :parentHeight="'63vh'"></chatCard>
+		<chatCard :currentIndex="current" :myCurrent="3" :type='Props.gameType' :parentHeight="'63vh'" :match_id='Props.info_id'></chatCard>
 	</scroll-view>
 
 	<live :live_url='animation_live_src' v-if="isDom"></live>
@@ -180,10 +179,9 @@ const getGameInfo = () => {//获取基础对局信息(足球)
 
 const isVideoLive = () => {//获取视频直播源
 	video_live_url.length = 0
-
 	api.GetLiveInfo({
-		// match_id: Props.info_id,
-		match_id: 2,
+		 match_id: String(Props.info_id),
+	
 	}).then(res => {
 		console.log('获取视频直播源:', res)
 	})

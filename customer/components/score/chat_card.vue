@@ -265,7 +265,7 @@ import { onMounted, onUnmounted, ref, reactive, getCurrentInstance, defineProps,
 import { useCounterStore } from '@/stores/counter' // 状态管理
 import { onShow, onBackPress } from '@dcloudio/uni-app'
 import api from '@/common/vmeitime-http/index.js'
-const Props = defineProps(['shop_id', 'chatType', 'parentHeight', 'currentIndex'])
+const Props = defineProps(['shop_id', 'chatType', 'parentHeight', 'currentIndex','match_id'])
 const counter = useCounterStore()
 
 // 参数
@@ -330,7 +330,7 @@ const sendRedPacket = async () => {
         content: '恭喜发财',
         amount,
         count,
-        match_id: 2,
+        match_id: Props.match_id,
     })
 
     // 模拟发送成功
@@ -362,7 +362,7 @@ const clickFollow = async item => {
         content: JSON.stringify({
             user_id: counter.user_id,
         }),
-        match_id: 2,
+        match_id: Props.match_id,
     })
     proxy.$refs.moreFunc.close()
 }
@@ -566,7 +566,7 @@ const selectImage = () => {
                     const params = {
                         type: 'image',
                         content: newData.data,
-                        match_id: 2,
+                        match_id: Props.match_id,
                     }
                     await api.SendMessage(params)
                 } else {
@@ -749,7 +749,7 @@ const sendMessage = async (msg, msgType = 'text') => {
     const socketPost = {
         type: msgType,
         content: msg,
-        match_id: 2,
+        match_id: Props.match_id,
     }
 
     await api.SendMessage(socketPost)
@@ -888,8 +888,8 @@ const sseStart = () => {
          * 注意：
          * 如果使用 sse-server.js 要在手机端使用的话，请确保你的手机和电脑处在一个局域网下并且是正常的ip地址
          */
-        url: 'http://47.92.233.116:8001/api/chat.room/receive?match_id=2',
-        // 请求头
+        // url: 'http://47.92.233.116:8001/api/chat.room/receive?match_id=' + Props.match_id,
+        url: counter.baseUrl + '/api/chat.room/receive?match_id=' + Props.match_id,
         headers: {
             server: 1,
             'ba-user-token': uni.getStorageSync('access_token'),
