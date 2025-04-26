@@ -105,7 +105,7 @@ import dataCard from "@/components/score/dataAnalysis_card.vue"
 import intelligence from "@/components/score/intelligence_card.vue"
 import date from "@/common/getdatetime.js"
 const { proxy, ctx } = getCurrentInstance()
-const Props = defineProps(['info_id', 'gameType'])
+const Props = defineProps(['info_id', 'gameType','awayId','homeId'])
 const current = ref(0)//发段器默认选择
 const items = reactive(['比赛分析', '数据趋势', '队伍状态', '比赛情报', '聊天'])
 const pageData = reactive({
@@ -130,7 +130,10 @@ const pageData = reactive({
 })
 const cardData = reactive({
 	history: {},
-	teamState: {},
+	teamState: {
+		homeRecent: {},
+		awayRecent: {}
+	},
 	blvData: {},
 	blvData_list: [],
 	intelligenceData: {}
@@ -204,24 +207,35 @@ const getVideoLive = () => {//获取视频直播信息
 	video_show.value = true
 	closePageData()
 }
+
 const getLeagueIntelligence = () => {//获取比赛情报
-	uni.request({
-		url: 'https://play3.honghuohuo.vip/api/common.Api.index/intelligenceV2',
-		timeout: 10000,
-		header: { 'Ba-User-Token': uni.getStorageSync('apitoken'), 'Server': '1' },
-		method: 'POST',
-		data: {
-			matchId: Number(Props.info_id),
-			key: 'jmkj',
-			secret: '500e2f2775ddf6b0b355eac5c4e162cb',
-			type: Props.gameType == 'lq' ? '2' : '1'
-		},
+	const fetchData = Props.gameType == 'lq' ? api.getFootballLeagueIntelligence : api.getFootballLeagueIntelligence
+	fetchData({
+		match_id: Number(Props.info_id)
 	}).then(res => {
-		console.log('执行情报');
+		console.log(res,'执行情报');
 		cardData.intelligenceData = res.data.data.info
 	}).catch(err => {
 		reject('数据处理失败~')
 	})
+	
+	// uni.request({
+	// 	url: 'https://play3.honghuohuo.vip/api/common.Api.index/intelligenceV2',
+	// 	timeout: 10000,
+	// 	header: { 'Ba-User-Token': uni.getStorageSync('apitoken'), 'Server': '1' },
+	// 	method: 'POST',
+	// 	data: {
+	// 		matchId: Number(Props.info_id),
+	// 		key: 'jmkj',
+	// 		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
+	// 		type: Props.gameType == 'lq' ? '2' : '1'
+	// 	},
+	// }).then(res => {
+	// 	console.log('执行情报');
+	// 	cardData.intelligenceData = res.data.data.info
+	// }).catch(err => {
+	// 	reject('数据处理失败~')
+	// })
 
 }
 const getGameVideo = () => {//获取比赛动画直播
@@ -247,16 +261,30 @@ const getGameVideo = () => {//获取比赛动画直播
 }
 
 const getGameTeamStatus = () => {//获取队伍状态（近期比赛结果）
-	var newObj = {
-		apiName: Props.gameType == 'lq' ? 'getBkTeamRecentMatch' : 'getTeamNearStatus',
-		matchId: Props.info_id,
-		number: 0,
-		key: 'jmkj',
-		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
-	}
-	getNewInfo(newObj).then(res => {
-		cardData.teamState = res.data.data
+	const fetchData = Props.gameType == 'lq' ? api.getFootballTeamStatus : api.getFootballTeamStatus
+
+	fetchData({
+		team_id:Props.awayId,
+	}).then(res => {
+		cardData.teamState.awayRecent = res.data.data
 	})
+
+	fetchData({
+		team_id:Props.homeId,
+	}).then(res => {
+		cardData.teamState.homeRecent = res.data.data
+	})
+
+	// var newObj = {
+	// 	apiName: Props.gameType == 'lq' ? 'getBkTeamRecentMatch' : 'getTeamNearStatus',
+	// 	matchId: Props.info_id,
+	// 	number: 0,
+	// 	key: 'jmkj',
+	// 	secret: '500e2f2775ddf6b0b355eac5c4e162cb',
+	// }
+	// getNewInfo(newObj).then(res => {
+	// 	cardData.teamState = res.data.data
+	// })
 }
 
 const getTeamBoutExploits = () => {//获取历史对局结果
@@ -285,21 +313,31 @@ const closePageData = () => {//关闭定时器
 	clearInterval(autoTimer.value)
 	autoTimer.value = null
 }
-const getOneMatchEuropeOdds = (pageNo, pageSize) => {//百家赔率分析
-	var obj = {
-		apiName: Props.gameType == 'lq' ? 'getBkLetMatchOddds' : 'getOneMatchEuropeOdds',
-		matchId: Props.info_id,
-		pageNo: pageNo,
-		pageSize: 20,
-		key: 'jmkj',
-		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
-	}
-	getNewInfo(obj).then(res => {
-		proxy.$refs.blvRef.complete(res.data.data.list)
+const getOneMatchEuropeOdds = (pageNo, pageSize) => {//数据趋势
+   const fetchData = Props.gameType == 'lq' ? api.getFootballDataTrend : api.getFootballDataTrend
+	fetchData({
+		match_id: Number(Props.info_id)
+	}).then(res => {
+		proxy.$refs.blvRef.complete(res.data.data)
 		cardData.blvData = res.data.data
 	}).catch(err => {
 		proxy.$refs.blvRef.complete(false)
 	})
+
+	// var obj = {
+	// 	apiName: Props.gameType == 'lq' ? 'getBkLetMatchOddds' : 'getOneMatchEuropeOdds',
+	// 	matchId: Props.info_id,
+	// 	pageNo: pageNo,
+	// 	pageSize: 20,
+	// 	key: 'jmkj',
+	// 	secret: '500e2f2775ddf6b0b355eac5c4e162cb',
+	// }
+	// getNewInfo(obj).then(res => {
+	// 	proxy.$refs.blvRef.complete(res.data.data.list)
+	// 	cardData.blvData = res.data.data
+	// }).catch(err => {
+	// 	proxy.$refs.blvRef.complete(false)
+	// })
 }
 
 const dataUpdating = (newData) => {//页面数据覆盖
@@ -358,34 +396,34 @@ const getMatchListLiveScore = () => {//获取实时比分
 		key: 'jmkj',
 		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
 	}
-	getNewInfo(obj).then(res => {
-		if (Props.gameType != 'lq') {//不是篮球
-			if (res.data.data.matchIdLiveMap[Props.info_id].score[1] != null) {
-				var b_split = res.data.data.matchIdLiveMap[Props.info_id].score[0].split(':')//上半场拆分
-				var allScore = res.data.data.matchIdLiveMap[Props.info_id].score[1].split(':')//全场
-				pageData.score.homeScore_b = b_split[0]
-				pageData.score.homeScore = allScore[0]
-				pageData.score.awatScore_b = b_split[1]
-				pageData.score.awayScore = allScore[1]
-				pageData.elapsedTime = res.data.data.matchIdLiveMap[Props.info_id].elapsedTime
-				pageData.matchStatus = res.data.data.matchIdLiveMap[Props.info_id].status
-			} else { closePageData() }
-			if (res.data.data.matchIdLiveMap[Props.info_id].status == 2) { closePageData() }
-		} else {
-			if (res.data.data.matchIdLiveMap[Props.info_id].status != 0 || res.data.data.matchIdLiveMap[Props.info_id].status != -1) {
-				pageData.elapsedTime = res.data.data.matchIdLiveMap[Props.info_id].status == -1 ? '已完场' : res.data.data.matchIdLiveMap[Props.info_id].status == 0 ? '未开赛' : '第' + res.data.data.matchIdLiveMap[Props.info_id].status + '节' + ' ' + res.data.data.matchIdLiveMap[Props.info_id].remainTime
-				var splitData = res.data.data.matchIdLiveMap[Props.info_id].score[5].split(':')
-				pageData.score['totalScoer'] = Number(splitData[0]) + Number(splitData[1])
-				var size = Number(splitData[0]) - Number(splitData[1])
-				pageData.score['ScoerGap'] = size >= 0 ? size : Math.abs(size)
-				pageData.score.homeScore = splitData[0]
-				pageData.score.awayScore = splitData[1]
-			} else {
-				closePageData()
-			}
-		}
-		console.log('更新完成');
-	})
+	// getNewInfo(obj).then(res => {
+	// 	if (Props.gameType != 'lq') {//不是篮球
+	// 		if (res.data.data.matchIdLiveMap[Props.info_id].score[1] != null) {
+	// 			var b_split = res.data.data.matchIdLiveMap[Props.info_id].score[0].split(':')//上半场拆分
+	// 			var allScore = res.data.data.matchIdLiveMap[Props.info_id].score[1].split(':')//全场
+	// 			pageData.score.homeScore_b = b_split[0]
+	// 			pageData.score.homeScore = allScore[0]
+	// 			pageData.score.awatScore_b = b_split[1]
+	// 			pageData.score.awayScore = allScore[1]
+	// 			pageData.elapsedTime = res.data.data.matchIdLiveMap[Props.info_id].elapsedTime
+	// 			pageData.matchStatus = res.data.data.matchIdLiveMap[Props.info_id].status
+	// 		} else { closePageData() }
+	// 		if (res.data.data.matchIdLiveMap[Props.info_id].status == 2) { closePageData() }
+	// 	} else {
+	// 		if (res.data.data.matchIdLiveMap[Props.info_id].status != 0 || res.data.data.matchIdLiveMap[Props.info_id].status != -1) {
+	// 			pageData.elapsedTime = res.data.data.matchIdLiveMap[Props.info_id].status == -1 ? '已完场' : res.data.data.matchIdLiveMap[Props.info_id].status == 0 ? '未开赛' : '第' + res.data.data.matchIdLiveMap[Props.info_id].status + '节' + ' ' + res.data.data.matchIdLiveMap[Props.info_id].remainTime
+	// 			var splitData = res.data.data.matchIdLiveMap[Props.info_id].score[5].split(':')
+	// 			pageData.score['totalScoer'] = Number(splitData[0]) + Number(splitData[1])
+	// 			var size = Number(splitData[0]) - Number(splitData[1])
+	// 			pageData.score['ScoerGap'] = size >= 0 ? size : Math.abs(size)
+	// 			pageData.score.homeScore = splitData[0]
+	// 			pageData.score.awayScore = splitData[1]
+	// 		} else {
+	// 			closePageData()
+	// 		}
+	// 	}
+	// 	console.log('更新完成');
+	// })
 }
 
 const getNewInfo = (requestData) => {//封装请求

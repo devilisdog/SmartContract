@@ -37,7 +37,7 @@
                 <!-- 日期选择 -->
                 <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
-                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" @onClick="clickGameCard" />
+                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq" @onClick="clickGameCard($event, 'zq',)" />
             </view>
 
             <!-- 北单 -->
@@ -45,7 +45,7 @@
                 <!-- 日期选择 -->
                 <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
-                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" @onClick="clickGameCard" />
+                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq" @onClick="clickGameCard($event, 'zq')" />
             </view>
 
             <!-- 足彩 -->
@@ -53,7 +53,7 @@
                 <!-- 日期选择 -->
                 <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
-                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" @onClick="clickGameCard" />
+                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq" @onClick="clickGameCard($event, 'zq')" />
             </view>
         </view>
 
@@ -182,11 +182,13 @@ const popupSelect = index => {
         closePopup()
     }
 }
-const clickGameCard = (gameId, type) => {
+const clickGameCard = (data,type) => {
+    const { matchId, awayId, homeId } = data
+    console.log(data, '点击比赛卡片触发')
     //点击比赛卡片触发
     uni.navigateTo({
         //跳转至比赛详情
-        url: `/pages/score/score_ticai/gameParticulars?info_id=${gameId}&gameType=${type}`,
+        url: `/pages/score/score_ticai/gameParticulars?info_id=${matchId}&gameType=${type}&awayId=${awayId}&homeId=${homeId}`,
         animationType: 'slide-in-bottom',
     })
 }
@@ -325,7 +327,7 @@ const footballList = (pageNo, pageSize) => {
 const getVidoLive = arr => {
     //获取竞彩视频直播
     api.GetLiveInfo({}).then(res => {
-        console.log(res.data.data.list, 'res')
+        console.log(res, 'res')
     })
 
     // uni.request({

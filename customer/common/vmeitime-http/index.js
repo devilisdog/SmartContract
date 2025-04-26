@@ -1564,8 +1564,8 @@ export const GetLiveInfo = data => {
     })
 }
 
-//足球--即时赛果
-export const getFootballMatchesBet = data => {
+//足球-比赛情报
+export const getFootballLeagueIntelligence = data => {
     http.interceptor.request = config => {
         const token = uni.getStorageSync('access_token') //避免全局获取token失效
         //添加通用参数
@@ -1577,13 +1577,55 @@ export const getFootballMatchesBet = data => {
     }
 
     return http.request({
-        url: '/api/match_bet/getFootballMatchesBet',
-        method: 'POST',
+        url: '/api/match_bet/getFootballMatchIntelligence',
+        method: 'GET',
         data,
     })
 }
 
+//足球-数据趋势
+export const getFootballDataTrend = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/match_bet/getFootballMatchDataTrend',
+        method: 'GET',
+        data,
+    })
+}
+
+//足球-队伍状态
+export const getFootballTeamStatus = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/match_bet/getFootballMatchAnalysis',
+        method: 'GET',
+        data,
+    })
+}
+
+
 export default {
+    getFootballTeamStatus,
+    getFootballLeagueIntelligence,
+    getFootballDataTrend,
     GetLiveInfo,
     GetRedPacket,
     Login,

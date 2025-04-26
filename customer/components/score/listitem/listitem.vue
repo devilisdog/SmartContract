@@ -1,5 +1,5 @@
 <template>
-	<view class="Card_zuqiu" v-if="props.type=='lq'" @click="Emits('onClick',props.cardInfo.matchId)">
+	<view class="Card_zuqiu" v-if="props.type=='lq'" @click="Emits('onClick', { matchId: props.cardInfo.matchId, type: props.type, awayId: props.cardInfo.awayId, homeId: props.cardInfo.homeId })">
 		<view class="card_top">
 			<view class="top_left">
 				<text class="minTextSize">{{props.cardInfo.matchNoCn}}</text>
@@ -53,7 +53,7 @@
 			</view>
 		</view>
 	</view>
-	<view class="Card_zuqiu" v-else @click="Emits('onClick',props.cardInfo.matchId)">
+	<view class="Card_zuqiu" v-else @click="Emits('onClick', { matchId: props.cardInfo.matchId, awayId: props.cardInfo.awayId, homeId: props.cardInfo.homeId })">
 		<view class="card_top">
 			<view class="top_left">
 				<text class="minTextSize">{{props.cardInfo.matchNoCn}}</text>
@@ -105,9 +105,8 @@
 		<view class="card_bottom">
 			<view class="bottom_left minTextSize" >
 				<view v-if="props.cardInfo.oddsBeidan">
-					<text v-if="props.cardInfo.oddsBeidan.split(';').length>3">
-						({{props.cardInfo.oddsBeidan.split(';')[3] > 0 ? '+'+props.cardInfo.oddsBeidan.split(';')[3]:props.cardInfo.oddsBeidan.split(';')[3]}})
-						<text v-for="itme,index in props.cardInfo.oddsBeidan.split(';')">
+					<text v-if="props.cardInfo.oddsBeidan.split(',').length>1">
+						<text v-for="itme,index in props.cardInfo.oddsBeidan.split(',')">
 							{{itme==0?'':index==3?'':itme+' '}}
 						</text>
 					</text>
