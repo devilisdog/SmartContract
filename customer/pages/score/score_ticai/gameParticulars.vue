@@ -69,8 +69,9 @@
 	</view>
 
 	<scroll-view scroll-y="true" v-show="current === 2" class="bottom_content_box">
-		<teamSatetCard @getData="getGameTeamStatus()" :cardInfo="cardData.teamState" :currentIndex="current"
-			:myCurrent="2" :type='Props.gameType'></teamSatetCard>
+		<teamSatetCard @getData="getGameTeamStatus()" :cardInfo="{
+			homeNearStatus: cardData.homeRecent, awayNearStatus: cardData.awayRecent
+		}" :currentIndex="current" :myCurrent="2" :type='Props.gameType'></teamSatetCard>
 	</scroll-view>
 
 	<scroll-view scroll-y="true" v-show="current === 3" class="bottom_content_box">
@@ -79,7 +80,8 @@
 	</scroll-view>
 
 	<scroll-view scroll-y="true" v-show="current === 4" class="bottom_content_box">
-		<chatCard :currentIndex="current" :myCurrent="3" :type='Props.gameType' :parentHeight="'63vh'" :match_id='Props.info_id'></chatCard>
+		<chatCard :currentIndex="current" :myCurrent="3" :type='Props.gameType' :parentHeight="'63vh'"
+			:match_id='Props.info_id'></chatCard>
 	</scroll-view>
 
 	<live :live_url='animation_live_src' v-if="isDom"></live>
@@ -105,7 +107,7 @@ import dataCard from "@/components/score/dataAnalysis_card.vue"
 import intelligence from "@/components/score/intelligence_card.vue"
 import date from "@/common/getdatetime.js"
 const { proxy, ctx } = getCurrentInstance()
-const Props = defineProps(['info_id', 'gameType','awayId','homeId'])
+const Props = defineProps(['info_id', 'gameType', 'awayId', 'homeId'])
 const current = ref(0)//发段器默认选择
 const items = reactive(['比赛分析', '数据趋势', '队伍状态', '比赛情报', '聊天'])
 const pageData = reactive({
@@ -130,10 +132,8 @@ const pageData = reactive({
 })
 const cardData = reactive({
 	history: {},
-	teamState: {
-		homeRecent: {},
-		awayRecent: {}
-	},
+	homeRecent: {},
+	awayRecent: {},
 	blvData: {},
 	blvData_list: [],
 	intelligenceData: {}
@@ -183,8 +183,8 @@ const getGameInfo = () => {//获取基础对局信息(足球)
 const isVideoLive = () => {//获取视频直播源
 	video_live_url.length = 0
 	api.GetLiveInfo({
-		 match_id: String(Props.info_id),
-	
+		match_id: String(Props.info_id),
+
 	}).then(res => {
 		console.log('获取视频直播源:', res)
 	})
@@ -213,12 +213,12 @@ const getLeagueIntelligence = () => {//获取比赛情报
 	fetchData({
 		match_id: Number(Props.info_id)
 	}).then(res => {
-		console.log(res,'执行情报');
+		console.log(res, '执行情报');
 		cardData.intelligenceData = res.data.data.info
 	}).catch(err => {
 		reject('数据处理失败~')
 	})
-	
+
 	// uni.request({
 	// 	url: 'https://play3.honghuohuo.vip/api/common.Api.index/intelligenceV2',
 	// 	timeout: 10000,
@@ -264,15 +264,15 @@ const getGameTeamStatus = () => {//获取队伍状态（近期比赛结果）
 	const fetchData = Props.gameType == 'lq' ? api.getFootballTeamStatus : api.getFootballTeamStatus
 
 	fetchData({
-		team_id:Props.awayId,
+		team_id: Props.awayId,
 	}).then(res => {
-		cardData.teamState.awayRecent = res.data.data
+		cardData.awayRecent = res.data.data
 	})
 
 	fetchData({
-		team_id:Props.homeId,
+		team_id: Props.homeId,
 	}).then(res => {
-		cardData.teamState.homeRecent = res.data.data
+		cardData.homeRecent = res.data.data
 	})
 
 	// var newObj = {
@@ -314,7 +314,7 @@ const closePageData = () => {//关闭定时器
 	autoTimer.value = null
 }
 const getOneMatchEuropeOdds = (pageNo, pageSize) => {//数据趋势
-   const fetchData = Props.gameType == 'lq' ? api.getFootballDataTrend : api.getFootballDataTrend
+	const fetchData = Props.gameType == 'lq' ? api.getFootballDataTrend : api.getFootballDataTrend
 	fetchData({
 		match_id: Number(Props.info_id)
 	}).then(res => {

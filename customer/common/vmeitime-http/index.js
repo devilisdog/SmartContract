@@ -1615,12 +1615,11 @@ export const getFootballTeamStatus = data => {
     }
 
     return http.request({
-        url: '/api/match_bet/getFootballMatchAnalysis',
+        url: '/api/match_bet/getFootballTeamStatus',
         method: 'GET',
         data,
     })
 }
-
 
 export default {
     getFootballTeamStatus,
