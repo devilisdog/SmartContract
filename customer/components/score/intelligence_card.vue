@@ -1,5 +1,5 @@
 <template>
-	<view class="card" v-if="Props.type!='lq' && show">
+	<view class="card">
 		<view class="card_title">球员伤停</view>
 		<view class="big_table">
 			<view class="home">

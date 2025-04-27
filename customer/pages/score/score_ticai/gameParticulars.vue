@@ -141,8 +141,8 @@ const cardData = reactive({
 const video_live_url = reactive([])
 const video_show = ref(false)
 onBeforeMount(() => {
-	if (Props.gameType == 'lq') { getBkGameInfo() } else { getGameInfo() }
-	getMatchListLiveScore()
+	// getGameInfo()
+	// getMatchListLiveScore()
 	isVideoLive()
 	getTeamBoutExploits()
 })
@@ -157,36 +157,57 @@ const isDom = ref(false)
 onHide(() => {
 	closePageData()
 })
-const getBkGameInfo = () => {//获取基础对局信息(篮球)
-	var obj = {
-		apiName: 'getBkMatchDetail',
-		matchId: String(Props.info_id),
-		key: 'jmkj',
-		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
-	}
-	getNewInfo(obj).then(res => {
-		dataUpdating(res.data.matchDetail)
-	})
-}
-const getGameInfo = () => {//获取基础对局信息(足球)
-	var obj = {
-		apiName: 'getMatchInfoById',
-		leagueMatchId: String(Props.info_id),
-		key: 'jmkj',
-		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
-	}
-	getNewInfo(obj).then(res => {
-		dataUpdating(res.data.data.leagueMatchVO)
-	})
-}
+// const getBkGameInfo = () => {//获取基础对局信息(篮球)
+// 	var obj = {
+// 		apiName: 'getBkMatchDetail',
+// 		matchId: String(Props.info_id),
+// 		key: 'jmkj',
+// 		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
+// 	}
+// 	getNewInfo(obj).then(res => {
+// 		dataUpdating(res.data.matchDetail)
+// 	})
+// }
+// const getGameInfo = () => {//获取基础对局信息(足球)
+// 	var obj = {
+// 		apiName: 'getMatchInfoById',
+// 		leagueMatchId: String(Props.info_id),
+// 		key: 'jmkj',
+// 		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
+// 	}
+// 	getNewInfo(obj).then(res => {
+// 		dataUpdating(res.data.data.leagueMatchVO)
+// 	})
+// }
 
 const isVideoLive = () => {//获取视频直播源
 	video_live_url.length = 0
 	api.GetLiveInfo({
 		match_id: String(Props.info_id),
-
 	}).then(res => {
-		console.log('获取视频直播源:', res)
+		console.log('获取视频直播源:', res.data.data)
+		const data = res.data.data
+
+		pageData.title =''
+		pageData.homeTeamLogo = data.home_team_logo
+		pageData.awayTeamLogo = data.away_team_logo
+		// pageData.elapsedTime = data.elapsedTime
+		pageData.homeTeamName = data.home_team_name
+		pageData.awayTeamName = data.away_team_name
+		// pageData.matchNoCn = data.matchNoCn
+		// pageData.matchStatus = data.matchStatus
+		// pageData.matchTime = data.matchTime
+
+		if(data.video){
+			for (const key in data.video) {
+				video_live_url.push({
+					url: data.video[key][0],
+					title: key
+				})
+			}
+		}
+
+		console.log(video_live_url, '视频直播源')
 	})
 
 	// uni.request({
@@ -213,7 +234,12 @@ const getLeagueIntelligence = () => {//足球比赛情报（篮球没有）
 		match_id: Number(Props.info_id)
 	}).then(res => {
 		console.log(res, '执行情报');
-		cardData.intelligenceData = res.data.data.info
+		const data = res.data.data
+		cardData.intelligenceData ={
+			homeInjuryList:data.intelligence.homeInjuryList,
+			awayInjuryList:data.intelligence.awayInjuryList,
+			injuryAnalysisList:data.intelligence.injuryAnalysisList
+		}
 	}).catch(err => {
 		reject('数据处理失败~')
 	})

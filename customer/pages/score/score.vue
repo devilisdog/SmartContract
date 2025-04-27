@@ -216,13 +216,14 @@ const footballList = (pageNo, pageSize) => {
 
     if (zqcurrent.value != 0) {
         api.GetFootballMatch({
-            pageNo: pageNo,
+            page: pageNo,
             pageSize: pageSize,
             date: date,
             type: zqcurrent.value, //1 即时  2 北单 3 胜负
         })
             .then(res => {
                 if (res.data.code == '1') {
+                    console.log(res.data.data.list, 'res')
                     proxy.$refs.cardList.complete(res.data.data.list)
                     getselectdatearr(date, res.data.data.dateList)
                     getVidoLive() //获取视频直播
@@ -232,9 +233,7 @@ const footballList = (pageNo, pageSize) => {
                     proxy.$refs.cardList.complete(false)
                 }
             })
-            .finally(() => {
-                proxy.$refs.cardList.complete(false)
-            })
+           
 
         // uni.request({
         //     url: 'https://play3.honghuohuo.vip/api/common.Api.index/MatchData',
@@ -274,7 +273,7 @@ const footballList = (pageNo, pageSize) => {
     } else {
         api.GetFootballResult({
             date: date,
-            pageNo: pageNo,
+            page: pageNo,
             pageSize: pageSize,
         })
             .then(res => {
@@ -287,10 +286,6 @@ const footballList = (pageNo, pageSize) => {
                     proxy.$refs.cardList.complete(false)
                 }
             })
-            .finally(() => {
-                proxy.$refs.cardList.complete(false)
-            })
-
         return
 
         // uni.request({
@@ -326,9 +321,9 @@ const footballList = (pageNo, pageSize) => {
 
 const getVidoLive = arr => {
     //获取竞彩视频直播
-    api.GetLiveInfo({}).then(res => {
-        console.log(res, 'res')
-    })
+    // api.GetLiveInfo({}).then(res => {
+    //     console.log(res, 'res')
+    // })
 
     // uni.request({
     //     url: 'http://111.67.201.54:9568/api.SportLiveV2/list?key=jmkj&secret=500e2f2775ddf6b0b355eac5c4e162cb',
@@ -367,7 +362,7 @@ const basketballLst = (pageNo, pageSize) => {
     if (lqcurrent.value != 2) {
         api.GetBasketballMatch({
             date: date,
-            pageNo: pageNo,
+            page: pageNo,
             pageSize: pageSize,
         })
             .then(res => {
@@ -419,7 +414,7 @@ const basketballLst = (pageNo, pageSize) => {
     } else {
         api.GetBasketballResult({
             date: date,
-            pageNo: pageNo,
+            page: pageNo,
             pageSize: pageSize,
         })
             .then(res => {
