@@ -1564,8 +1564,8 @@ export const GetLiveInfo = data => {
     })
 }
 
-//足球-比赛情报
-export const getFootballLeagueIntelligence = data => {
+//足球-比赛分析
+export const getFootballMatchAnalysis = data => {
     http.interceptor.request = config => {
         const token = uni.getStorageSync('access_token') //避免全局获取token失效
         //添加通用参数
@@ -1577,13 +1577,32 @@ export const getFootballLeagueIntelligence = data => {
     }
 
     return http.request({
-        url: '/api/match_bet/getFootballMatchIntelligence',
+        url: '/api/match_bet/getFootballMatchAnalysis',
         method: 'GET',
         data,
     })
 }
 
-//足球-数据趋势
+//篮球-比赛分析
+export const getBasketballMatchAnalysis = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/match_bet/getBasketballMatchAnalysis',
+        method: 'GET',
+        data,
+    })
+}
+
+//足球/篮球-数据趋势
 export const getFootballDataTrend = data => {
     http.interceptor.request = config => {
         const token = uni.getStorageSync('access_token') //避免全局获取token失效
@@ -1621,7 +1640,48 @@ export const getFootballTeamStatus = data => {
     })
 }
 
+//篮球-队伍状态
+export const getBasketballTeamStatus = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/match_bet/getBasketballTeamStatus',
+        method: 'GET',
+        data,
+    })
+}
+
+//足球-比赛情报
+export const getFootballLeagueIntelligence = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/match_bet/getFootballMatchIntelligence',
+        method: 'GET',
+        data,
+    })
+}
+
 export default {
+    getBasketballMatchAnalysis,
+    getBasketballTeamStatus,
+    getFootballMatchAnalysis,
     getFootballTeamStatus,
     getFootballLeagueIntelligence,
     getFootballDataTrend,

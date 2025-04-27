@@ -1,5 +1,5 @@
 <template>
-	<view class="card" v-if="show && Props.type == 'lq'">
+	<!-- <view class="card" v-if="show && Props.type == 'lq'">
 		<view class="column_box" style="display: flex;align-items: center;justify-content: space-between;">
 			<text style="color:red;">升盘：{{ Props.cardInfo.upHandicap }}</text>
 			<text style="color:green;">降盘：{{ Props.cardInfo.downHandicap }}</text>
@@ -38,8 +38,8 @@
 				</view>
 			</view>
 		</view>
-	</view>
-	<view class="card" v-if="show && Props.type != 'lq'">
+	</view> -->
+	<view class="card" v-if="show">
 		<view class="column_box">
 			<!-- <qiun-data-charts type="column" :opts="opts" :chartData="datas" ></qiun-data-charts> -->
 			<uni-segmented-control @clickItem="onClickTab" :current="current" :values="tabItems" activeColor="#dd3620"

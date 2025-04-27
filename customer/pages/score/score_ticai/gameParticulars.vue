@@ -208,9 +208,8 @@ const getVideoLive = () => {//获取视频直播信息
 	closePageData()
 }
 
-const getLeagueIntelligence = () => {//获取比赛情报
-	const fetchData = Props.gameType == 'lq' ? api.getFootballLeagueIntelligence : api.getFootballLeagueIntelligence
-	fetchData({
+const getLeagueIntelligence = () => {//足球比赛情报（篮球没有）
+	api.getFootballLeagueIntelligence({
 		match_id: Number(Props.info_id)
 	}).then(res => {
 		console.log(res, '执行情报');
@@ -261,7 +260,7 @@ const getGameVideo = () => {//获取比赛动画直播
 }
 
 const getGameTeamStatus = () => {//获取队伍状态（近期比赛结果）
-	const fetchData = Props.gameType == 'lq' ? api.getFootballTeamStatus : api.getFootballTeamStatus
+	const fetchData = Props.gameType == 'lq' ? api.getBasketballTeamStatus : api.getFootballTeamStatus
 
 	fetchData({
 		team_id: Props.awayId,
@@ -287,17 +286,39 @@ const getGameTeamStatus = () => {//获取队伍状态（近期比赛结果）
 	// })
 }
 
-const getTeamBoutExploits = () => {//获取历史对局结果
-	var obj = {
-		apiName: Props.gameType == 'lq' ? 'getBkTeamBoutMatch' : 'getTeamBoutExploits',
-		matchId: Props.info_id,
-		number: 1,
-		key: 'jmkj',
-		secret: '500e2f2775ddf6b0b355eac5c4e162cb',
-	}
-	getNewInfo(obj).then(res => {
+const getTeamBoutExploits = () => {//比赛分析
+	const fetchData = Props.gameType == 'lq' ? api.getBasketballMatchAnalysis : api.getFootballMatchAnalysis
+
+	fetchData({
+		match_id: Number(Props.info_id),
+	}).then(res => {
 		cardData.history = res.data.data
 	})
+
+
+	// fetchData({
+	// 	team_id: Props.awayId,
+	// }).then(res => {
+	// 	cardData.awayRecent = res.data.data
+	// })
+
+	// fetchData({
+	// 	team_id: Props.homeId,
+	// }).then(res => {
+	// 	cardData.homeRecent = res.data.data
+	// })
+
+
+	// var obj = {
+	// 	apiName: Props.gameType == 'lq' ? 'getBkTeamBoutMatch' : 'getTeamBoutExploits',
+	// 	matchId: Props.info_id,
+	// 	number: 1,
+	// 	key: 'jmkj',
+	// 	secret: '500e2f2775ddf6b0b355eac5c4e162cb',
+	// }
+	// getNewInfo(obj).then(res => {
+	// 	cardData.history = res.data.data
+	// })
 }
 const autoTimer = ref(null)
 const autoPageData = () => {//开启定时获取数据
@@ -313,10 +334,10 @@ const closePageData = () => {//关闭定时器
 	clearInterval(autoTimer.value)
 	autoTimer.value = null
 }
-const getOneMatchEuropeOdds = (pageNo, pageSize) => {//数据趋势
-	const fetchData = Props.gameType == 'lq' ? api.getFootballDataTrend : api.getFootballDataTrend
-	fetchData({
-		match_id: Number(Props.info_id)
+const getOneMatchEuropeOdds = (pageNo, pageSize) => {//篮球足球数据趋势
+	api.getFootballDataTrend({
+		match_id: Number(Props.info_id),
+		type: Props.gameType == 'lq' ? 2 : 1
 	}).then(res => {
 		proxy.$refs.blvRef.complete(res.data.data)
 		cardData.blvData = res.data.data
