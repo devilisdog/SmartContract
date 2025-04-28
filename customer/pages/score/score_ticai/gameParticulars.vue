@@ -230,7 +230,9 @@ const getLeagueIntelligence = () => {//足球比赛情报（篮球没有）
 		cardData.intelligenceData = {
 			homeInjuryList: data.intelligence.homeInjuryList,
 			awayInjuryList: data.intelligence.awayInjuryList,
-			injuryAnalysisList: data.intelligence.injuryAnalysisList
+			injuryAnalysisList: data.intelligence.injuryAnalysisList,
+			homeNews: data.missing.homeNews,
+			awayNews: data.missing.awayNews
 		}
 	}).catch(err => {
 		reject('数据处理失败~')

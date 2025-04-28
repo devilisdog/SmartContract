@@ -4,55 +4,39 @@
 		<view>{{ loading ? '加载中...' : '' }}</view>
 	</template> -->
 
-    <gao-ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore" @onFinish="finishCore" />
+    <gao-ChatSSEClient ref="chatSSEClientRef" @onOpen="openCore" @onError="errorCore" @onMessage="messageCore"
+        @onFinish="finishCore" />
 
-    <scroll-view
-        :scroll-y="true"
-        class="scroll-view_style"
-        :scroll-with-animation="scroll_isAmin"
-        :scroll-into-view="scroll_view_showId"
-        upper-threshold="100"
-        @scrolltoupper="loadingData"
-        :style="{ height: Scroll_heigth + 'px' }"
-    >
+    <scroll-view :scroll-y="true" class="scroll-view_style" :scroll-with-animation="scroll_isAmin"
+        :scroll-into-view="scroll_view_showId" upper-threshold="100" @scrolltoupper="loadingData"
+        :style="{ height: Scroll_heigth + 'px' }">
         <uni-load-more :status="loadingStates"></uni-load-more>
         <view v-for="(itme, index) in ShowData" :key="itme.id" :id="itme.id">
-            <view class="pop_up" v-if="ShowData[index - 1] && getTimeDifferenceInMinutes(ShowData[index - 1].created_at, itme.created_at) > 5">
-                {{ dateShowStyle(itme.created_at) }}</view
-            >
+            <view class="pop_up"
+                v-if="ShowData[index - 1] && getTimeDifferenceInMinutes(ShowData[index - 1].created_at, itme.created_at) > 5">
+                {{ dateShowStyle(itme.created_at) }}</view>
             <view class="chat_box_my_image_rigth" v-if="itme.user_id == counter.user_id && itme.type == 'image'">
                 <!-- 我 -->
-                <image
-                    :src="itme.content"
-                    class="contnet_image"
-                    lazy-load
-                    :lazy-load-margin="0"
-                    :mode="itme.image_type"
-                    @click="checkImage([itme.content])"
-                    @longpress="longpressSet(itme, index)"
-                >
+                <image :src="itme.content" class="contnet_image" lazy-load :lazy-load-margin="0" :mode="itme.image_type"
+                    @click="checkImage([itme.content])" @longpress="longpressSet(itme, index)">
                 </image>
                 <image :src="counter.user_imgs" class="logo_style" lazy-load :lazy-load-margin="0"></image>
             </view>
             <view class="chat_box_my_image_left" v-else-if="itme.user_id != counter.user_id && itme.type == 'image'">
-                <image :src="itme.avatar || '@/static/img/avatar/avatar.png'" class="logo_style" lazy-load :lazy-load-margin="0" />
+                <image :src="itme.avatar || '@/static/img/avatar/avatar.png'" class="logo_style" lazy-load
+                    :lazy-load-margin="0" />
                 <view style="display: flex; flex-flow: column">
                     <text class="username" style="margin: 0rpx 0rpx 10rpx 20rpx">{{ itme.username }}</text>
-                    <image
-                        :src="itme.content"
-                        class="contnet_image"
-                        lazy-load
-                        :lazy-load-margin="0"
-                        :mode="itme.image_type"
-                        @click="checkImage([itme.content])"
-                        @longpress="longpressSet(itme, index)"
-                    >
+                    <image :src="itme.content" class="contnet_image" lazy-load :lazy-load-margin="0"
+                        :mode="itme.image_type" @click="checkImage([itme.content])"
+                        @longpress="longpressSet(itme, index)">
                     </image>
                 </view>
             </view>
             <!-- 红包消息 - 我发的 -->
             <view class="chat_box_my" v-else-if="itme.user_id == counter.user_id && itme.type == 'redpack'">
-                <view class="chat_redpacket_box" @click="openRedPacketDetail(itme)" @longpress="longpressSet(itme, index)">
+                <view class="chat_redpacket_box" @click="openRedPacketDetail(itme)"
+                    @longpress="longpressSet(itme, index)">
                     <view class="redpacket_top">
                         <image src="/static/img/redpacket_icon.png" class="redpacket_icon"></image>
                         <text class="redpacket_text">恭喜发财，大吉大利</text>
@@ -62,14 +46,16 @@
                     </view>
                 </view>
                 <!-- <image :src="counter.user_imgs" class="logo_style" lazy-load :lazy-load-margin="0"></image> -->
-                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0"> </image>
+                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0">
+                </image>
             </view>
             <!-- 红包消息 - 别人发的 -->
             <view class="chat_box_shop" v-else-if="itme.user_id != counter.user_id && itme.type == 'redpack'">
                 <image :src="itme.avatar || '@/static/img/avatar/avatar.png'" class="logo_style" />
                 <view class="left_chat">
                     <text class="username">{{ itme.username }}</text>
-                    <view class="chat_redpacket_box shop_redpacket" @click="openRedPacketDetail(itme)" @longpress="longpressSet(itme, index)">
+                    <view class="chat_redpacket_box shop_redpacket" @click="openRedPacketDetail(itme)"
+                        @longpress="longpressSet(itme, index)">
                         <view class="redpacket_top">
                             <image src="/static/img/redpacket_icon.png" class="redpacket_icon"></image>
                             <text class="redpacket_text">恭喜发财，大吉大利</text>
@@ -82,7 +68,7 @@
             </view>
 
             <!-- 跟单消息 - 我发的 -->
-            <view class="chat_box_my" v-else-if="itme.user_id == counter.user_id && itme.type == 'fllow'">
+            <view class="chat_box_my" v-else-if="itme.user_id == counter.user_id && itme.type == 'follow'">
                 <view class="chat_follow_box" @click="viewFollowDetail(itme)" @longpress="longpressSet(itme, index)">
                     <view class="follow_top">
                         <image src="/static/img/follow_icon.png" class="follow_icon"></image>
@@ -102,15 +88,17 @@
                         <text>查看详情</text>
                     </view>
                 </view>
-                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0"> </image>
+                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0">
+                </image>
             </view>
 
             <!-- 跟单消息 - 别人发的 -->
-            <view class="chat_box_shop" v-else-if="itme.user_id != counter.user_id && itme.type == 'fllow'">
+            <view class="chat_box_shop" v-else-if="itme.user_id != counter.user_id && itme.type == 'follow'">
                 <image :src="itme.avatar || '@/static/img/avatar/avatar.png'" class="logo_style" />
                 <view class="left_chat">
                     <text class="username">{{ itme.username }}</text>
-                    <view class="chat_follow_box shop_follow" @click="viewFollowDetail(itme)" @longpress="longpressSet(itme, index)">
+                    <view class="chat_follow_box shop_follow" @click="viewFollowDetail(itme)"
+                        @longpress="longpressSet(itme, index)">
                         <view class="follow_top">
                             <image src="/static/img/follow_icon.png" class="follow_icon"></image>
                             <text class="follow_text">{{ itme.content.title || '跟单消息' }}</text>
@@ -140,7 +128,8 @@
                     <text>{{ itme.content }}</text>
                 </view>
                 <!-- <image :src="counter.user_imgs" class="logo_style" lazy-load :lazy-load-margin="0"></image> -->
-                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0"> </image>
+                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0">
+                </image>
             </view>
             <view class="chat_box_shop" v-else>
                 <!-- <image :src="itme.avatar || '@/static/img/avatar/avatar.png'" class="logo_style" lazy-load
@@ -160,12 +149,14 @@
     <view class="bottm_from" :style="{ bottom: inputLoc + 'px' }">
         <input :adjust-position="false" v-model="myChatContent" @keyboardheightchange="clickInput" class="inputStyle" />
         <uni-icons type="plus-filled" size="62rpx" @click="openMoreFunc"></uni-icons>
-        <view :class="myChatContent == '' ? 'send_false' : 'send_true'" @touchend.prevent="sendMessage(myChatContent, 'text')"> 发送 </view>
+        <view :class="myChatContent == '' ? 'send_false' : 'send_true'"
+            @touchend.prevent="sendMessage(myChatContent, 'text')"> 发送 </view>
     </view>
     <fui-dialog :show="isOpenDialog" content="确定删除聊天记录吗？注意聊天记录一旦删除无法恢复喔!!!" @click="clickDialog" />
     <uni-popup ref="openSet" type="bottom">
         <view class="setBox">
-            <view class="setButton" v-for="(itme, index) in chatSetData" @click="clickSetChat(itme)">{{ itme.title }} </view>
+            <view class="setButton" v-for="(itme, index) in chatSetData" @click="clickSetChat(itme)">{{ itme.title }}
+            </view>
         </view>
     </uni-popup>
 
@@ -200,10 +191,16 @@
                     <input type="digit" v-model="redPacketAmount" class="redpack-input" placeholder="请输入金额" />
                 </view>
                 <view class="redpack-fixed-amounts">
-                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 10 }" @click="setFixedAmount(10)"> 10</view>
-                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 50 }" @click="setFixedAmount(50)"> 50</view>
-                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 100 }" @click="setFixedAmount(100)">100</view>
-                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 200 }" @click="setFixedAmount(200)">200</view>
+                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 10 }"
+                        @click="setFixedAmount(10)">
+                        10</view>
+                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 50 }"
+                        @click="setFixedAmount(50)">
+                        50</view>
+                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 100 }"
+                        @click="setFixedAmount(100)">100</view>
+                    <view class="fixed-amount-item" :class="{ active: redPacketAmount == 200 }"
+                        @click="setFixedAmount(200)">200</view>
                 </view>
                 <view class="redpack-item">
                     <text class="redpack-label">红包数量</text>
@@ -249,8 +246,7 @@
                 <view class="redpack-detail-time">
                     <text>
                         <!-- 红包总金额{{ currentRedPacket.redPacketInfo?.totalAmount || '0.00' }}元， -->
-                        共{{ currentRedPacket.redPacketInfo?.count || 1 }}个红包</text
-                    >
+                        共{{ currentRedPacket.redPacketInfo?.count || 1 }}个红包</text>
                 </view>
             </view>
             <view class="redpack-detail-close" @click="closeRedPacketDetail">
@@ -265,7 +261,7 @@ import { onMounted, onUnmounted, ref, reactive, getCurrentInstance, defineProps,
 import { useCounterStore } from '@/stores/counter' // 状态管理
 import { onShow, onBackPress } from '@dcloudio/uni-app'
 import api from '@/common/vmeitime-http/index.js'
-const Props = defineProps(['shop_id', 'chatType', 'parentHeight', 'currentIndex','match_id'])
+const Props = defineProps(['shop_id', 'chatType', 'parentHeight', 'currentIndex', 'match_id'])
 const counter = useCounterStore()
 
 // 参数
@@ -325,19 +321,27 @@ const sendRedPacket = async () => {
 
     const eachAmount = (amount / count).toFixed(2)
 
-    await api.SendMessage({
-        type: 'redpack',
+    api.SendMessage({
+        type: 'redpacket',
         content: '恭喜发财',
         amount,
         count,
         match_id: Props.match_id,
+    }).then(res => {
+        if (res.data.code == 1) {
+            // 模拟发送成功
+            // uni.showToast({
+            //     title: `成功发送总额为${amount}元的${count}个红包`,
+            //     icon: 'none',
+            // })
+        } else {
+            uni.showToast({
+                title: `${res.data.msg}`,
+                icon: 'none',
+            })
+        }
     })
 
-    // 模拟发送成功
-    uni.showToast({
-        title: `成功发送总额为${amount}元的${count}个红包`,
-        icon: 'none',
-    })
 
     // 关闭红包弹窗
     proxy.$refs.redPacketPopup.close()
@@ -358,12 +362,25 @@ const clickRedPacket = () => {
 // 点击发送跟单
 const clickFollow = async item => {
     await api.SendMessage({
-        type: 'fllow',
+        type: 'follow',
         content: JSON.stringify({
             user_id: counter.user_id,
-        }),
+        }).slice(1, -1),
         match_id: Props.match_id,
+    }).then(res => {
+        if (res.data.code == 1) {
+            // uni.showToast({
+            //     title: `成功发送跟单`,
+            //     icon: 'none',
+            // })
+        } else {
+            uni.showToast({
+                title: `${res.data.msg}`,
+                icon: 'none',
+            })
+        }
     })
+
     proxy.$refs.moreFunc.close()
 }
 
@@ -383,12 +400,12 @@ const viewFollowDetail = followData => {
 }
 
 /*
-	@socketPost {
-		@type 		private 私聊, public 群聊, postId 传递参数
-		@from 		谁发的
-		@to   		发给谁的
-		@content 	内容
-	}
+    @socketPost {
+        @type 		private 私聊, public 群聊, postId 传递参数
+        @from 		谁发的
+        @to   		发给谁的
+        @content 	内容
+    }
 */
 const pageQuantity = ref(20) //每页聊天数量
 
@@ -555,8 +572,8 @@ const selectImage = () => {
         var nowTime = new Date().getTime()
         console.log(upUrl, 'upUrl')
         uni.uploadFile({
-            // url: counter.baseUrl + '/api/chat.room/upload',
-            url: 'http://47.92.233.116:8001/api/chat.room/upload',
+            url: counter.baseUrl + '/api/chat.room/upload',
+            // url: 'http://47.92.233.116:8001/api/chat.room/upload',
             header: { server: 1, 'ba-user-token': uni.getStorageSync('access_token') },
             filePath: upUrl,
             name: 'file',
@@ -861,7 +878,7 @@ const errorCore = err => {
 //接收消息
 const messageCore = msg => {
     const data = msg.data ? JSON.parse(msg.data) : {}
-    if (data.type && ['hint', 'image', 'redpack', 'text', 'fllow'].includes(data.type)) {
+    if (data.type && ['hint', 'image', 'redpacket', 'text', 'follow'].includes(data.type)) {
         const newData = {
             ...data,
             //根据时间戳生成随机id
