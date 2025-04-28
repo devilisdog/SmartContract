@@ -16,23 +16,14 @@
 				<uni-notice-bar :text="pageData.homeTeamName" color="#fff" :speed="50" backgroundColor="rgba(0,0,0,0.0)"
 					:scrollable="true" />
 			</view>
-			<view class="box_middle" v-if="pageData.isProceed">
-				<text>{{ date.getNowFormatDate(7, pageData.matchTime) }}</text>
-				<text class="middle_state">{{ pageData.elapsedTime }}</text>
+			<view class="box_middle" v-if="[2, 3, 4, 5, 7].includes(pageData.matchStatus)">
+				<!-- <text>{{ date.getNowFormatDate(7, pageData.matchTime) }}</text>
+				<text class="middle_state">{{ pageData.elapsedTime }}</text> -->
 				<view class="middle_score">
-					<view class="score_card">{{ pageData.score.homeScore }}</view>
-					<view style="font-size:48rpx;font-weight: bold;">:</view>
-					<view class="score_card">{{ pageData.score.awayScore }}</view>
+					{{ pageData.score }}
 				</view>
-				<text v-if="Props.gameType == 'lq'">
-					分差{{ pageData.score.ScoerGap }}·总分{{ pageData.score.totalScoer }}
-				</text>
-				<text v-else>
-					半·[{{ pageData.score.homeScore_b }}:{{ pageData.score.awatScore_b }}]
-				</text>
-				<view class="live_label" v-if="pageData.elapsedTime != '已完场'">
-					<!-- <text @click="getGameVideo" class="dom">动画直播</text> -->
-					<text @click="getVideoLive" class="vido" v-show="video_live_url.length > 0">视频直播</text>
+				<view class="live_label" v-if="[2, 3, 4, 5, 7].includes(pageData.matchStatus)">
+					<text @click="getVideoLive" class="vido">视频直播</text>
 				</view>
 			</view>
 			<view class="box_middle" style="justify-content: center;" v-else>
@@ -84,7 +75,7 @@
 			:match_id='Props.info_id'></chatCard>
 	</scroll-view>
 
-	<live :live_url='animation_live_src' v-if="isDom"></live>
+	<!-- <live :live_url='animation_live_src' v-if="isDom"></live> -->
 	<videoLive v-if="video_show" :live_url_arr='video_live_url'></videoLive>
 
 	<uni-transition :show="isDom || video_show" mode-class="fade" class="close_live"
@@ -118,16 +109,17 @@ const pageData = reactive({
 	homeTeamName: '',//主队名字
 	awayTeamName: '',//客队名字
 	matchNoCn: '',//场次转义
-	matchStatus: '',//比赛状态
+	matchStatus: '',//比赛状态 1：未开赛 2/3/4/5/7：进行中 10：已完场
 	matchTime: '',//比赛时间
-	score: {
-		homeScore_b: 0,//主队半场进球
-		homeScore: 0,//主队进球
-		awayScore: 0,//客队进球
-		awatScore_b: 0,//客队半场进球
-		totalScoer: 0,//总进球
-		ScoerGap: 0//分差
-	},
+	score: '',//比分
+	// score: {
+	// 	homeScore_b: 0,//主队半场进球
+	// 	homeScore: 0,//主队进球
+	// 	awayScore: 0,//客队进球
+	// 	awatScore_b: 0,//客队半场进球
+	// 	totalScoer: 0,//总进球
+	// 	ScoerGap: 0//分差
+	// },
 	isProceed: false
 })
 const cardData = reactive({
@@ -184,30 +176,30 @@ const isVideoLive = () => {//获取视频直播源
 	video_live_url.length = 0
 	api.GetLiveInfo({
 		match_id: String(Props.info_id),
+		// match_id: 2389537,
+		type: Props.gameType == 'lq' ? 1 : 2
 	}).then(res => {
-		console.log('获取视频直播源:', res.data.data)
 		const data = res.data.data
 
-		pageData.title =''
+		pageData.title = ''
 		pageData.homeTeamLogo = data.home_team_logo
 		pageData.awayTeamLogo = data.away_team_logo
-		// pageData.elapsedTime = data.elapsedTime
 		pageData.homeTeamName = data.home_team_name
 		pageData.awayTeamName = data.away_team_name
-		// pageData.matchNoCn = data.matchNoCn
-		// pageData.matchStatus = data.matchStatus
-		// pageData.matchTime = data.matchTime
+		pageData.matchStatus = data.status
+		pageData.score = data.score
 
-		if(data.video){
+		if (data.video) {
 			for (const key in data.video) {
-				video_live_url.push({
-					url: data.video[key][0],
-					title: key
-				})
+				const valueArray = data.video[key];
+				valueArray.forEach((a, idx) => {
+					video_live_url.push({
+						url: a,
+						title: `${key}线路${idx + 1}`
+					});
+				});
 			}
 		}
-
-		console.log(video_live_url, '视频直播源')
 	})
 
 	// uni.request({
@@ -235,10 +227,10 @@ const getLeagueIntelligence = () => {//足球比赛情报（篮球没有）
 	}).then(res => {
 		console.log(res, '执行情报');
 		const data = res.data.data
-		cardData.intelligenceData ={
-			homeInjuryList:data.intelligence.homeInjuryList,
-			awayInjuryList:data.intelligence.awayInjuryList,
-			injuryAnalysisList:data.intelligence.injuryAnalysisList
+		cardData.intelligenceData = {
+			homeInjuryList: data.intelligence.homeInjuryList,
+			awayInjuryList: data.intelligence.awayInjuryList,
+			injuryAnalysisList: data.intelligence.injuryAnalysisList
 		}
 	}).catch(err => {
 		reject('数据处理失败~')
