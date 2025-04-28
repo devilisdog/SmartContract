@@ -34,7 +34,7 @@
                 </view>
             </view>
             <!-- 红包消息 - 我发的 -->
-            <view class="chat_box_my" v-else-if="itme.user_id == counter.user_id && itme.type == 'redpack'">
+            <view class="chat_box_my" v-else-if="itme.user_id == counter.user_id && itme.type == 'redpacket'">
                 <view class="chat_redpacket_box" @click="openRedPacketDetail(itme)"
                     @longpress="longpressSet(itme, index)">
                     <view class="redpacket_top">
@@ -50,7 +50,7 @@
                 </image>
             </view>
             <!-- 红包消息 - 别人发的 -->
-            <view class="chat_box_shop" v-else-if="itme.user_id != counter.user_id && itme.type == 'redpack'">
+            <view class="chat_box_shop" v-else-if="itme.user_id != counter.user_id && itme.type == 'redpacket'">
                 <image :src="itme.avatar || '@/static/img/avatar/avatar.png'" class="logo_style" />
                 <view class="left_chat">
                     <text class="username">{{ itme.username }}</text>
@@ -162,7 +162,7 @@
 
     <!-- 发送更多功能 -->
     <uni-popup ref="moreFunc" type="bottom" :mask-click="true">
-        <view class="more-func-box" :style="{ height: inputLoc + 'px' }">
+        <view class="more-func-box" :style="{ height: 120 + 'px' }">
             <view class="func-item" @click="selectImage">
                 <uni-icons type="image" size="60rpx" color="#666"></uni-icons>
                 <text>图片</text>
@@ -365,7 +365,7 @@ const clickFollow = async item => {
         type: 'follow',
         content: JSON.stringify({
             user_id: counter.user_id,
-        }).slice(1, -1),
+        }),
         match_id: Props.match_id,
     }).then(res => {
         if (res.data.code == 1) {
@@ -573,7 +573,7 @@ const selectImage = () => {
         console.log(upUrl, 'upUrl')
         uni.uploadFile({
             url: counter.baseUrl + '/api/chat.room/upload',
-            // url: 'http://47.92.233.116:8001/api/chat.room/upload',
+            // url: 'http://118.178.137.218:2025/api/chat.room/upload',
             header: { server: 1, 'ba-user-token': uni.getStorageSync('access_token') },
             filePath: upUrl,
             name: 'file',
@@ -905,7 +905,7 @@ const sseStart = () => {
          * 注意：
          * 如果使用 sse-server.js 要在手机端使用的话，请确保你的手机和电脑处在一个局域网下并且是正常的ip地址
          */
-        // url: 'http://47.92.233.116:8001/api/chat.room/receive?match_id=' + Props.match_id,
+        // url: 'http://118.178.137.218:2025/api/chat.room/receive?match_id=' + Props.match_id,
         url: counter.baseUrl + '/api/chat.room/receive?match_id=' + Props.match_id,
         headers: {
             server: 1,
