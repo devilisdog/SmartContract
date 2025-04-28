@@ -570,7 +570,6 @@ const selectImage = () => {
     function upImage(upUrl, type) {
         uni.showLoading({ title: '', mask: true })
         var nowTime = new Date().getTime()
-        console.log(upUrl, 'upUrl')
         uni.uploadFile({
             url: counter.baseUrl + '/api/chat.room/upload',
             // url: 'http://118.178.137.218:2025/api/chat.room/upload',
@@ -585,6 +584,8 @@ const selectImage = () => {
                         content: newData.data,
                         match_id: Props.match_id,
                     }
+                    proxy.$refs.moreFunc.close()
+                    
                     await api.SendMessage(params)
                 } else {
                     uni.showToast({ title: '图片上传失败~', icon: 'error' })
