@@ -23,7 +23,7 @@
 					<text class="titleTextSize">{{props.cardInfo.awayName.slice(0,4)}}</text>
 				</view>
 			</view>
-			<view class="middle_middle" style="color:red;" v-if="props.cardInfo.status!=0">
+			<view class="middle_middle" style="color:red;" v-if="props.cardInfo.allScore">
 				<text style="color:#969696;font-size:26rpx;">
 					{{props.cardInfo.elapsedTime}}{{parseFloat(props.cardInfo.elapsedTime).toString() !== "NaN"?'`':''}}
 				</text><br>
