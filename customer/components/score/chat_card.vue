@@ -238,10 +238,10 @@
                 </view>
                 <view v-else class="redpack-detail-finished">
                     <!-- <image src="/static/img/redpacket_finished.png" class="redpack-finished-icon"></image> -->
-                    <text class="redpack-finished-text">您来晚了，红包已被抢完</text>
+                    <text class="redpack-finished-text">您来晚了，{{ currentRedPacket.redPacketInfo?.message }}</text>
                 </view>
                 <view class="redpack-detail-info">
-                    <text>{{ currentRedPacket.redPacketInfo?.isFinished ? '红包已抢完' : '已领取红包' }}</text>
+                    <text>{{ currentRedPacket.redPacketInfo?.isFinished ? currentRedPacket.redPacketInfo?.message : '已领取红包' }}</text>
                 </view>
                 <view class="redpack-detail-time">
                     <text>
@@ -386,7 +386,7 @@ const clickFollow = async item => {
 
 // 查看跟单详情
 const viewFollowDetail = followData => {
-    const follow_user_id = followData.content ? JSON.parse(followData.content).user_id : undefined
+    const follow_user_id = followData.content.user_id
     // 这里可以跳转到跟单详情页
     if (follow_user_id && follow_user_id != counter.user_id) {
         uni.navigateTo({
@@ -839,11 +839,15 @@ const openRedPacketDetail = async redpack => {
     const redpacket_id = redpack.content.redpacket_id
 
     const res = await api.GetRedPacket({ redpacket_id })
-    if (res.code == 1) {
+    console.log(res, 'res')
+    if (res.data.code == 1) {
         // 设置当前红包数据
         currentRedPacket.username = redpack.username
         currentRedPacket.avatar = redpack.avatar
-        currentRedPacket.redPacketInfo = redpack.content
+        currentRedPacket.redPacketInfo = {
+            ...redpack.content,
+            amount: res.data.data.amount,
+        }
 
         // 打开红包详情弹窗
         proxy.$refs.redPacketDetailPopup.open()
@@ -854,6 +858,7 @@ const openRedPacketDetail = async redpack => {
         currentRedPacket.redPacketInfo = {
             ...redpack.content,
             isFinished: true,
+            message: res.data.msg,
         }
 
         // 打开红包详情弹窗，但显示已抢完
