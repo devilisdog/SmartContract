@@ -234,7 +234,7 @@ const footballList = (pageNo, pageSize) => {
         api.GetFootballMatch({
             page: pageNo,
             pageSize: pageSize,
-            date: new Date(new Date(date).getTime() + 24*60*60*1000).toISOString().split('T')[0],
+            date:date,
             type: zqcurrent.value, //1 即时  2 北单 3 胜负
         })
             .then(res => {
@@ -288,7 +288,7 @@ const footballList = (pageNo, pageSize) => {
         // })
     } else {
         api.GetFootballResult({
-            date: new Date(new Date(date).getTime() + 24*60*60*1000).toISOString().split('T')[0],
+            date:date,
             page: pageNo,
             pageSize: pageSize,
         })
@@ -377,7 +377,7 @@ const basketballLst = (pageNo, pageSize) => {
 
     if (lqcurrent.value != 2) {
         api.GetBasketballMatch({
-            date: new Date(new Date(date).getTime() + 24*60*60*1000).toISOString().split('T')[0],
+            date:date,
             page: pageNo,
             pageSize: pageSize,
         })
@@ -429,7 +429,7 @@ const basketballLst = (pageNo, pageSize) => {
         // })
     } else {
         api.GetBasketballResult({
-           date: new Date(new Date(date).getTime() + 24*60*60*1000).toISOString().split('T')[0],
+           date:date,
             page: pageNo,
             pageSize: pageSize,
         })
