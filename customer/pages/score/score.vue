@@ -49,7 +49,7 @@
             <!-- 北单 -->
             <view v-else-if="zqcurrent === 2">
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                <srcolcheck :current="pcurrent" styleType="text" :values="pitems" activeColor="#dd3620"
                     @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
                 <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq"
@@ -59,7 +59,7 @@
             <!-- 足彩 -->
             <view v-else>
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                <srcolcheck :current="1" styleType="text" :values="pitems" activeColor="#dd3620"
                     @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
                 <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq"
@@ -150,6 +150,8 @@ const zqgroupitems = reactive(['竞彩赛果', '竞彩即时', '北单', '胜负
 const bkGroupitems = reactive(['全部', '竞彩即时', '竞彩赛果']) //头部tab数据
 
 const current = ref(1) //头部选择器默认值
+const pcurrent = ref(0) 
+const pitems=reactive([])
 const zqcurrent = ref(1) //足球的二级index
 const lqcurrent = ref(0) //篮球的二级index
 
@@ -231,18 +233,32 @@ const footballList = (pageNo, pageSize) => {
     const date = dategroupitems[datecurrent.value] ? dategroupitems[datecurrent.value].initData : toDay
 
     if (zqcurrent.value != 0) {
-        api.GetFootballMatch({
+        const params={
             page: pageNo,
             pageSize: pageSize,
             date:date,
             type: zqcurrent.value, //1 即时  2 北单 3 胜负
-        })
+        }
+        if(zqcurrent.value==2||zqcurrent.value==3){
+            delete params.date
+        }
+
+        api.GetFootballMatch(params)
             .then(res => {
                 if (res.data.code == '1') {
-                    console.log(res.data.data.list, 'res')
+                    
                     proxy.$refs.cardList.complete(res.data.data.list)
-                    getselectdatearr(date, res.data.data.dateList)
+                    
                     getVidoLive() //获取视频直播
+
+                    if(zqcurrent.value==2||zqcurrent.value==3){
+                        res.data.data.dateList.forEach(item=>{
+                            pitems.push({date: item, week:''})
+                        })
+                        pcurrent.value=res.data.data?.date
+                    }else{
+                        getselectdatearr(date, res.data.data.dateList)
+                    }
                 } else if (res.data.code == '2') {
                     proxy.$refs.cardList.complete(true)
                 } else {
@@ -434,7 +450,6 @@ const basketballLst = (pageNo, pageSize) => {
             pageSize: pageSize,
         })
             .then(res => {
-                console.log(res.data.data.list, 'res')
                 if (res.data.code == '1') {
                     proxy.$refs.cardList.complete(res.data.data.list)
                     getselectdatearr(date, res.data.data.dateList)

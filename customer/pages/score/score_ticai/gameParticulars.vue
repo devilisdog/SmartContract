@@ -177,7 +177,7 @@ const isVideoLive = () => {//获取视频直播源
 	api.GetLiveInfo({
 		match_id: String(Props.info_id),
 		// match_id: 2389537,
-		type: Props.gameType == 'lq' ? 1 : 2
+		type: Props.gameType == 'lq' ? 2 : 1
 	}).then(res => {
 		const data = res.data.data
 
