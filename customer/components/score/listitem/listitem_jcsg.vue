@@ -11,8 +11,11 @@
 				<text style="font-size: 35rpx;;width: 200rpx; text-align: right ;">{{props.cardInfo.short_home}}</text>
 				
 				<view style="flex: 1 ;display: flex;flex-direction: column;text-align: center;">
-					<text style="color: red; font-size: 45rpx;">{{props.cardInfo.home_score+":"+props.cardInfo.away_score}}</text>
-					<text v-if="props.cardInfo.type=='1'" style="color:  darkgray; font-size: 20rpx;">半场({{props.cardInfo.half_home_score+":"+props.cardInfo.half_away_score}})</text>
+					<text style="color: red; font-size: 45rpx;" v-if="props.cardInfo.home_score&&props.cardInfo.away_score">{{props.cardInfo.home_score+":"+props.cardInfo.away_score}}</text>
+					<text style="color: red; font-size: 45rpx;" v-else>VS</text>
+
+
+					<text v-if="props.cardInfo.type=='1'&&props.cardInfo.half_home_score&&props.cardInfo.half_away_score" style="color:  darkgray; font-size: 20rpx;">半场({{props.cardInfo.half_home_score+":"+props.cardInfo.half_away_score}})</text>
 				</view>
 					
 				
