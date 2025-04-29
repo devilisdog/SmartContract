@@ -4,7 +4,8 @@
             <view class="status_bar" style="background-color: #fff; height: var(--status-bar-height)" />
             <uni-nav-bar height="100rpx">
                 <view style="margin: auto; width: 100%; padding: 0px 5px">
-                    <SegmentedControl :current="current" styleType="text" :values="groupitems" activeColor="#dd3620" @clickItem="onClickItem"> </SegmentedControl>
+                    <SegmentedControl :current="current" styleType="text" :values="groupitems" activeColor="#dd3620"
+                        @clickItem="onClickItem"> </SegmentedControl>
                 </view>
                 <template v-slot:left>
                     <navigator open-type="navigate" url="/pages/score/gameRecord/gameRecord">
@@ -12,7 +13,8 @@
                     </navigator>
                 </template>
                 <template v-slot:right>
-                    <text style="color: #b6b6b6; font-weight: bold" @click="open">{{ popupData[popupValue].title }}</text>
+                    <text style="color: #b6b6b6; font-weight: bold" @click="open">{{ popupData[popupValue].title
+                        }}</text>
                 </template>
             </uni-nav-bar>
         </template>
@@ -23,57 +25,69 @@
         <!-- 足球 -->
         <view v-else-if="current === 1">
             <view style="background-color: white; padding: 0rpx 10rpx; width: 100%; box-sizing: border-box">
-                <uni-segmented-control :current="zqcurrent" styleType="text" :values="zqgroupitems" activeColor="#dd3620" @clickItem="onClickzqItem"> </uni-segmented-control>
+                <uni-segmented-control :current="zqcurrent" styleType="text" :values="zqgroupitems"
+                    activeColor="#dd3620" @clickItem="onClickzqItem"> </uni-segmented-control>
             </view>
             <!-- 竞彩赛果 -->
             <view v-if="zqcurrent === 0">
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
+                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
                 <listitemJcsg v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" />
             </view>
             <!-- 竞彩即时 -->
             <view v-else-if="zqcurrent === 1">
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
+                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
-                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq" @onClick="clickGameCard($event, 'zq',)" />
+                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq"
+                    @onClick="clickGameCard($event, 'zq',)" />
             </view>
 
             <!-- 北单 -->
             <view v-else-if="zqcurrent === 2">
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
+                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
-                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq" @onClick="clickGameCard($event, 'zq')" />
+                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq"
+                    @onClick="clickGameCard($event, 'zq')" />
             </view>
 
             <!-- 足彩 -->
             <view v-else>
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
+                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
-                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq" @onClick="clickGameCard($event, 'zq')" />
+                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq"
+                    @onClick="clickGameCard($event, 'zq')" />
             </view>
         </view>
 
         <!-- 篮球 -->
         <view v-else>
             <view style="background-color: white; padding: 0rpx 10rpx; width: 100%; box-sizing: border-box">
-                <uni-segmented-control :current="lqcurrent" styleType="text" :values="bkGroupitems" activeColor="#dd3620" @clickItem="onClicklqItem"> </uni-segmented-control>
+                <uni-segmented-control :current="lqcurrent" styleType="text" :values="bkGroupitems"
+                    activeColor="#dd3620" @clickItem="onClicklqItem"> </uni-segmented-control>
             </view>
             <!-- 竞彩赛果 -->
             <view v-if="lqcurrent === 2">
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
+                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickdateItem"></srcolcheck>
                 <!-- 列表 -->
                 <listitemJcsg v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" />
             </view>
             <view v-else>
                 <!-- 日期选择 -->
-                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620" @onClickdateItem="onClickdateItem"></srcolcheck>
+                <srcolcheck :current="datecurrent" styleType="text" :values="dategroupitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickdateItem"></srcolcheck>
 
-                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="lq" @onClick="clickGameCard($event, 'lq')" />
+                <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="lq"
+                    @onClick="clickGameCard($event, 'lq')" />
                 <!-- 列表 -->
             </view>
         </view>
@@ -82,10 +96,12 @@
     <uni-popup type="bottom" ref="screen" :mask-click="false">
         <!-- 筛选弹窗 -->
         <view class="popupCard">
-            <view :class="popupValue == index ? 'popup_button_true' : 'popup_button'" v-for="(itme, index) in popupData" @click="popupSelect(index)">
+            <view :class="popupValue == index ? 'popup_button_true' : 'popup_button'" v-for="(itme, index) in popupData"
+                @click="popupSelect(index)">
                 {{ itme.title }}
             </view>
-            <view class="popup_button" style="background-color: #e8e8e8; color: black; margin-top: 40rpx" @click="closePopup"> 取消 </view>
+            <view class="popup_button" style="background-color: #e8e8e8; color: black; margin-top: 40rpx"
+                @click="closePopup"> 取消 </view>
         </view>
     </uni-popup>
 
@@ -182,7 +198,7 @@ const popupSelect = index => {
         closePopup()
     }
 }
-const clickGameCard = (data,type) => {
+const clickGameCard = (data, type) => {
     const { matchId, awayId, homeId } = data
     console.log(data, '点击比赛卡片触发')
     //点击比赛卡片触发
@@ -233,7 +249,7 @@ const footballList = (pageNo, pageSize) => {
                     proxy.$refs.cardList.complete(false)
                 }
             })
-           
+
 
         // uni.request({
         //     url: 'https://play3.honghuohuo.vip/api/common.Api.index/MatchData',
@@ -582,7 +598,7 @@ function onClickdateItem(e) {
     }
 }
 
-function getselectdatearr(selectDate, dateList) {
+function getselectdatearr(selectDate, dateList = []) {
     // 获取最近7天内的日期数组 格式为：2025-04-28
     // const dateArr = []
     // for (let i = 6; i >= 0; i--) {
@@ -596,7 +612,7 @@ function getselectdatearr(selectDate, dateList) {
 
     //分类选择器数据处理
     dategroupitems.length = 0
-    var copyDate = JSON.parse(JSON.stringify(dateList))
+    var copyDate = [...dateList]
     var nowDate = new Date() //用户当前时间
     var weeks = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     copyDate.forEach(function (item, index) {
