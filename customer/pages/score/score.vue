@@ -49,8 +49,8 @@
             <!-- 北单 -->
             <view v-else-if="zqcurrent === 2">
                 <!-- 日期选择 -->
-                <srcolcheck :current="pcurrent" styleType="text" :values="pitems" activeColor="#dd3620"
-                    @onClickdateItem="onClickdateItem"></srcolcheck>
+                <tab-switch :current="pcurrent" styleType="text" :values="pitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickpdateItem"></tab-switch>
                 <!-- 列表 -->
                 <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq"
                     @onClick="clickGameCard($event, 'zq')" />
@@ -59,8 +59,8 @@
             <!-- 足彩 -->
             <view v-else>
                 <!-- 日期选择 -->
-                <srcolcheck :current="1" styleType="text" :values="pitems" activeColor="#dd3620"
-                    @onClickdateItem="onClickdateItem"></srcolcheck>
+                <tab-switch :current="pcurrent" styleType="text" :values="pitems" activeColor="#dd3620"
+                    @onClickdateItem="onClickpdateItem"></tab-switch>
                 <!-- 列表 -->
                 <listitem v-for="(itme, index) in gameData" :cardInfo="itme" :key="itme.matchId" type="zq"
                     @onClick="clickGameCard($event, 'zq')" />
@@ -118,6 +118,7 @@ import { useCounterStore } from '@/stores/counter'
 import customtabbar from '@/components/nav-bottom/nav-bottom.vue'
 import { onBeforeMount, ref, reactive, getCurrentInstance, watch } from 'vue'
 import { onHide, onShow } from '@dcloudio/uni-app'
+import tabSwitch from '@/components/score/tab-switch.vue'
 const { proxy, ctx } = getCurrentInstance()
 
 const gameData = ref([]) //列表基础数据
@@ -150,8 +151,8 @@ const zqgroupitems = reactive(['竞彩赛果', '竞彩即时', '北单', '胜负
 const bkGroupitems = reactive(['全部', '竞彩即时', '竞彩赛果']) //头部tab数据
 
 const current = ref(1) //头部选择器默认值
-const pcurrent = ref(0) 
-const pitems=reactive([])
+const pcurrent = ref(0)
+const pitems = reactive([])
 const zqcurrent = ref(1) //足球的二级index
 const lqcurrent = ref(0) //篮球的二级index
 
@@ -233,30 +234,37 @@ const footballList = (pageNo, pageSize) => {
     const date = dategroupitems[datecurrent.value] ? dategroupitems[datecurrent.value].initData : toDay
 
     if (zqcurrent.value != 0) {
-        const params={
+        const params = {
             page: pageNo,
             pageSize: pageSize,
-            date:date,
+            date: date,
             type: zqcurrent.value, //1 即时  2 北单 3 胜负
         }
-        if(zqcurrent.value==2||zqcurrent.value==3){
+        if (zqcurrent.value == 2 || zqcurrent.value == 3) {
             delete params.date
+            // 使用pitems中的日期作为参数
+            if (pitems.length > 0 && pcurrent.value < pitems.length) {
+                params.date = pitems[pcurrent.value]
+            }
         }
 
         api.GetFootballMatch(params)
             .then(res => {
                 if (res.data.code == '1') {
-                    
                     proxy.$refs.cardList.complete(res.data.data.list)
-                    
+
                     getVidoLive() //获取视频直播
 
-                    if(zqcurrent.value==2||zqcurrent.value==3){
-                        res.data.data.dateList.forEach(item=>{
-                            pitems.push({date: item, week:''})
+                    if (zqcurrent.value == 2 || zqcurrent.value == 3) {
+                        pitems.length = 0  // 清空数组
+                        res.data.data.dateList.forEach(item => {
+                            pitems.push(item)
                         })
-                        pcurrent.value=res.data.data?.date
-                    }else{
+                        // 确保pcurrent在有效范围内
+                        if (pcurrent.value >= pitems.length) {
+                            pcurrent.value = 0
+                        }
+                    } else {
                         getselectdatearr(date, res.data.data.dateList)
                     }
                 } else if (res.data.code == '2') {
@@ -304,7 +312,7 @@ const footballList = (pageNo, pageSize) => {
         // })
     } else {
         api.GetFootballResult({
-            date:date,
+            date: date,
             page: pageNo,
             pageSize: pageSize,
         })
@@ -393,7 +401,7 @@ const basketballLst = (pageNo, pageSize) => {
 
     if (lqcurrent.value != 2) {
         api.GetBasketballMatch({
-            date:date,
+            date: date,
             page: pageNo,
             pageSize: pageSize,
         })
@@ -445,7 +453,7 @@ const basketballLst = (pageNo, pageSize) => {
         // })
     } else {
         api.GetBasketballResult({
-           date:date,
+            date: date,
             page: pageNo,
             pageSize: pageSize,
         })
@@ -585,6 +593,8 @@ const onClickzqItem = e => {
     //tab子分类足球
     if (zqcurrent.value != e.currentIndex) {
         dategroupitems.length = 0
+        pitems.length = 0  // 清空pitems数组
+        pcurrent.value = 0  // 重置pcurrent为默认值
         zqcurrent.value = e.currentIndex
         proxy.$refs.cardList.reload()
     }
@@ -601,6 +611,14 @@ const onClickItem = e => {
     if (current.value != e.currentIndex) {
         dategroupitems.length = 0
         current.value = e.currentIndex
+        proxy.$refs.cardList.reload()
+    }
+}
+
+function onClickpdateItem(e) {
+    //期数选择
+    if (pcurrent.value != e) {
+        pcurrent.value = e
         proxy.$refs.cardList.reload()
     }
 }

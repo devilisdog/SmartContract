@@ -149,8 +149,9 @@ const Emits = defineEmits(['onClick'])
 watch(() => props.cardInfo, (newValue, oldValue) => {
 	const [one, two, three, four, five, six] = props.cardInfo?.score || []
 
+	const fscore = six ? six : five
 	if (six) {
-		const { a, b } = six?.split(':')
+		const [a, b] = six ? six?.split(':') : five?.split(':')
 		props.cardInfo['fullScore'] = `${b}:${a}`
 		props.cardInfo['diff'] = Math.abs(Number(a) - Number(b))
 		props.cardInfo['totalScore'] = Number(a) + Number(b)
@@ -158,13 +159,10 @@ watch(() => props.cardInfo, (newValue, oldValue) => {
 })
 onBeforeMount(() => {
 	const [one, two, three, four, five, six] = props.cardInfo?.score || []
+	const fscore = six ? six : five
 
-	const f = (str) => {
-		return str.replace(/(\d+):(\d+)/, "$2:$1")
-	}
-
-	if (six) {
-		const [a, b] = six?.split(':')
+	if (fscore) {
+		const [a, b] = fscore?.split(':')
 		props.cardInfo['fullScore'] = `${b}:${a}`
 		props.cardInfo['diff'] = Math.abs(Number(a) - Number(b))
 		props.cardInfo['totalScore'] = Number(a) + Number(b)
