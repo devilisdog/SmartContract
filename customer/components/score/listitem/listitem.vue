@@ -25,10 +25,17 @@
 				</view>
 			</view>
 			<view class="middle_middle" style="color:red;" v-if="props.cardInfo?.status !== 1">
-				<text style="color:#969696;font-size:26rpx;">
-					{{ props.cardInfo?.status == 10 ? "已完场" : "进行中" }}
-				</text><br>
-				<text
+				<text style="color:#969696;font-size:26rpx;" v-if="props.cardInfo?.status == 10"	>
+					已完场
+				</text>
+				<text style="color:#969696;font-size:26rpx;" v-else>
+					<view class="live-icon">
+						<image src="@/static/img/main/liveIcon.png" mode="aspectFit" class="tv-icon"></image>
+						<text class="live-time">{{ props.cardInfo?.elapsedTime + '`' }}</text>
+					</view>
+				</text>
+				<view>
+					<text
 					style="font-size:32rpx;font-weight: bold;background-color:#ffe5e5;padding:2rpx 15rpx;border-radius:10rpx;">
 					{{ props.cardInfo?.fullScore }}
 				</text><br>
@@ -36,6 +43,7 @@
 					分差:{{ props.cardInfo?.diff }}
 					总分:{{ props.cardInfo?.totalScore }}
 				</text>
+				</view>
 			</view>
 			<view class="middle_middle" style="flex:0.3;" v-else>VS</view>
 			<view class="middle_right">
@@ -85,8 +93,14 @@
 				</view>
 			</view>
 			<view class="middle_middle" style="color:red;" v-if="props.cardInfo?.status !== 1">
-				<text style="color:#969696;font-size:26rpx;">
-					{{ props.cardInfo?.status == 10 ? "已完场" : "进行中" }}
+				<text style="color:#969696;font-size:26rpx;" v-if="props.cardInfo?.status == 10"	>
+					已完场
+				</text>
+				<text style="color:#969696;font-size:26rpx;" v-else>
+					<view class="live-icon">
+						<image src="@/static/img/main/liveIcon.png" mode="aspectFit" class="tv-icon"></image>
+						<text class="live-time">{{ props.cardInfo?.elapsedTime + '`' }}</text>
+					</view>
 				</text>
 				<!-- <text class="label" v-if="props.cardInfo.isVidoLive && props.cardInfo.elapsedTime != '已完场'">直播</text> -->
 				<br>
@@ -163,7 +177,7 @@ onBeforeMount(() => {
 
 	if (fscore) {
 		const [a, b] = fscore?.split(':')
-		props.cardInfo['fullScore'] = `${b}:${a}`
+		props.cardInfo['fullScore'] = `${b||0}:${a||0}`
 		props.cardInfo['diff'] = Math.abs(Number(a) - Number(b))
 		props.cardInfo['totalScore'] = Number(a) + Number(b)
 	}
@@ -273,5 +287,25 @@ onBeforeMount(() => {
 	margin: 10rpx auto;
 	padding: 20rpx;
 	box-shadow: 0px 5rpx 15rpx 5rpx rgba(226, 226, 226, 0.4);
+}
+
+.live-icon {
+	display: inline-flex;
+	align-items: center;
+	margin-left: 10rpx;
+}
+
+.tv-icon {
+	width: 32rpx;
+	height: 32rpx;
+	// background-color: #4CAF50;
+	border-radius: 6rpx;
+	padding: 2rpx;
+}
+
+.live-time {
+	font-size: 24rpx;
+	color: #4CAF50;
+	margin-left: 6rpx;
 }
 </style>

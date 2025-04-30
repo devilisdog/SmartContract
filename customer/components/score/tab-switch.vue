@@ -64,13 +64,28 @@ watch(() => props.current, (newVal) => {
     // 计算需要滚动的距离
     const query = uni.createSelectorQuery()
     query.selectAll('.tab-item').boundingClientRect()
+    query.selectViewport().boundingClientRect()
     query.exec((res) => {
         if (res[0]) {
-            let totalWidth = 0
+            let items = res[0];
+            let viewport = res[1];
+            let viewportWidth = viewport.width;
+            
+            // 计算选中项的位置和宽度
+            let selectedItem = items[newVal];
+            let targetPosition = 0;
+            
+            // 计算选中项前面所有项的宽度总和
             for (let i = 0; i < newVal; i++) {
-                totalWidth += res[0][i].width
+                targetPosition += items[i].width;
             }
-            scrollLeft.value = totalWidth
+            
+            // 目标是让选中项居中显示
+            // 计算应该滚动的位置：选中项的位置减去视口宽度的一半，再加上选中项宽度的一半
+            let idealScrollLeft = targetPosition - (viewportWidth / 2) + (selectedItem.width / 2);
+            
+            // 确保不会滚动到负值
+            scrollLeft.value = Math.max(0, idealScrollLeft);
         }
     })
 }, { immediate: true })
