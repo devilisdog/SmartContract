@@ -25,17 +25,10 @@
 				</view>
 			</view>
 			<view class="middle_middle" style="color:red;" v-if="props.cardInfo?.status !== 1">
-				<text style="color:#969696;font-size:26rpx;" v-if="props.cardInfo?.status == 10"	>
-					已完场
-				</text>
-				<text style="color:#969696;font-size:26rpx;" v-else>
-					<view class="live-icon">
-						<image src="@/static/img/main/liveIcon.png" mode="aspectFit" class="tv-icon"></image>
-						<text class="live-time">{{ props.cardInfo?.elapsedTime + '`' }}</text>
-					</view>
-				</text>
-				<view>
-					<text
+				<text style="color:#969696;font-size:26rpx;">
+					{{ props.cardInfo?.status == 10 ? "已完场" : "进行中" }}
+				</text><br>
+				<text
 					style="font-size:32rpx;font-weight: bold;background-color:#ffe5e5;padding:2rpx 15rpx;border-radius:10rpx;">
 					{{ props.cardInfo?.fullScore }}
 				</text><br>
@@ -43,7 +36,6 @@
 					分差:{{ props.cardInfo?.diff }}
 					总分:{{ props.cardInfo?.totalScore }}
 				</text>
-				</view>
 			</view>
 			<view class="middle_middle" style="flex:0.3;" v-else>VS</view>
 			<view class="middle_right">
@@ -98,7 +90,7 @@
 				</text>
 				<text style="color:#969696;font-size:26rpx;" v-else>
 					<view class="live-icon">
-						<image src="@/static/img/main/liveIcon.png" mode="aspectFit" class="tv-icon"></image>
+						<image src="@/static/img/liveIcon.png" mode="aspectFit" class="tv-icon"></image>
 						<text class="live-time">{{ props.cardInfo?.elapsedTime + '`' }}</text>
 					</view>
 				</text>
@@ -298,7 +290,7 @@ onBeforeMount(() => {
 .tv-icon {
 	width: 32rpx;
 	height: 32rpx;
-	// background-color: #4CAF50;
+	background-color: #4CAF50;
 	border-radius: 6rpx;
 	padding: 2rpx;
 }

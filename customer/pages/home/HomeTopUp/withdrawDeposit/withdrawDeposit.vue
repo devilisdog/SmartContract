@@ -154,6 +154,18 @@
 				</text>
 				<input style="margin:10rpx 0;" v-model="alipay_numebr" type="number"/>
 			</view>
+			<view class="froms_card" style="border-bottom:1rpx solid #d9d9d9;margin:20rpx 0;" v-if="tabIndex==1">
+				<text style="color: #9c9c9c;font-size:26rpx;">
+					银行卡照片：
+				</text>
+				<view class="bank-card-upload" @click="chooseBankCardPhoto">
+					<image v-if="bankCardPhoto" :src="bankCardPhoto" mode="aspectFill" class="bank-card-preview"></image>
+					<view v-else class="bank-card-placeholder">
+						<text class="upload-icon">+</text>
+						<text class="upload-text">点击上传银行卡照片</text>
+					</view>
+				</view>
+			</view>
 			<view class="buttom_card">
 				<view class="buttomStyle" style="flex:1.2;background-color: #ff7979;" @click="addPayNumber">新增账号</view>
 			</view>
@@ -179,6 +191,15 @@
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
+				<view v-if="tabIndex==1 && StorageData.bankCard.length > 0" class="bank-card-images">
+					<text style="font-size:26rpx;color:#9c9c9c;margin-bottom:10rpx;">已上传的银行卡照片：</text>
+					<scroll-view scroll-x="true" class="bank-photos-scroll">
+						<image v-for="(item, index) in StorageData.bankCard" :key="index" 
+							:src="item.photo" v-if="item.photo" 
+							class="bank-photo-item" @click="previewBankCardPhoto(item.photo)">
+						</image>
+					</scroll-view>
+				</view>
 				<image src="@/static/img/follow/none.png" style="width:220rpx;height:220rpx;" 
 					v-show="StorageData[selectStr].length==0">
 				</image>
@@ -235,6 +256,7 @@
 	})
 	const StorageData=ref()
 	const selectPayNumber=ref(0)//popup选择的账号的index
+	const bankCardPhoto = ref('') // 银行卡照片
 	
 	const userSelectData=ref(null)//当前用户选择的提现账号
 	const Errorfc=()=>{//警告提示
@@ -264,13 +286,24 @@
 	}
 	const addPayNumber=()=>{//新增账号
 		if(alipay_numebr.value==''){
-			uni.showToast({title:'请输入支付宝账号',position:'center',icon:'none'})
+			uni.showToast({title:'请输入账号',position:'center',icon:'none'})
 			return
 		}
+		
+		if(tabIndex.value==1 && !bankCardPhoto.value) {
+			uni.showToast({title:'请上传银行卡照片',position:'center',icon:'none'})
+			return
+		}
+		
 		var newPay={
 			name:counter.sfz_name,
 			number:alipay_numebr.value,
 		}
+		
+		if(tabIndex.value==1) {
+			newPay.photo = bankCardPhoto.value
+		}
+		
 		if(tabIndex.value==0){
 			StorageData.value.aliPay.push(newPay)
 			selectPayNumber.value=StorageData.value.aliPay.length-1
@@ -281,6 +314,7 @@
 			selectPayNumber.value=StorageData.value.bankCard.length-1
 			uni.setStorageSync('payData',StorageData.value)
 			alipay_numebr.value=''
+			bankCardPhoto.value=''
 		}
 	}
 	const clickSelect=(index)=>{//用户点击账号卡片选择
@@ -315,7 +349,7 @@
 	const easyinputVal = ref('')//金额输入框 值 - 支付宝
 	const easyinputVal02 = ref('')//金额输入框 值 - 银行卡
 	const tijiao = (e) =>{//提现按钮
-		if (counter.userAllData.userinfo.RealName == 0) { //实名认证拦截
+		if (counter.userAllData?.userinfo?.RealName == 0) { //实名认证拦截
 			uni.showModal({
 				title: '提示',
 				content: '检测的未实名认证，请认证后在进行投注',
@@ -343,7 +377,7 @@
 			return
 		}
 		uni.showLoading({title:'提交中~',mask:true})
-		var userNumber=counter.userAllData.userinfo.mobile==''?counter.userAllData.userinfo.email:counter.userAllData.userinfo.mobile
+		var userNumber=counter.userAllData?.userinfo?.mobile==''?counter.userAllData?.userinfo?.email:counter.userAllData?.userinfo?.mobile
 		api.Withdrawal({
 			'type':e,
 			'contact':userNumber,
@@ -417,6 +451,102 @@
 	}
 	const back = () =>{//返回
 		uni.navigateBack()
+	}
+	const chooseBankCardPhoto = () => {
+		uni.showActionSheet({
+			itemList: ['拍照', '从相册选择'],
+			success: function (res) {
+				if (res.tapIndex === 0) {
+					// 拍照
+					uni.chooseImage({
+						count: 1,
+						sourceType: ['camera'],
+						success(res) {
+						const tempFilePaths=res.tempFilePaths[0]
+                        if (res.tempFiles[0].size > 10485760) {
+                            uni.showToast({
+                                icon: 'error',
+                                title: '图片大小不能超过10M',
+                                duration: 1500,
+                            })
+                        } else {
+							uni.showLoading({
+									title: '提交中',
+									mask: true,
+								})
+							uni.uploadFile({
+                                url: counter.baseUrl + '/api/new_user/bankCardRecognition',
+                                header: { server: 1, 'ba-user-token': uni.getStorageSync('access_token') },
+                                filePath: tempFilePaths,
+                                name: 'file',
+                                success: async res => {
+                                    const newData = JSON.parse(res.data)||{}
+                                    if (newData.code == 1) {
+										const {data}=newData
+										alipay_numebr.value=data?.card_number
+										bankCardPhoto.value=tempFilePaths
+										uni.hideLoading()
+                                    } else {
+                                        uni.showToast({ title: '图片上传失败~', icon: 'error' })
+                                    }
+                                },
+                                complete() {
+                                    uni.hideLoading()
+                                },
+                            })
+                        }
+					  },
+					})
+				} else if (res.tapIndex === 1) {
+					// 从相册选择
+					uni.chooseImage({
+						count: 1,
+						sourceType: ['album'],
+						success(res) {
+							const tempFilePaths=res.tempFilePaths[0]
+                        if (res.tempFiles[0].size > 10485760) {
+                            uni.showToast({
+                                icon: 'error',
+                                title: '图片大小不能超过10M',
+                                duration: 1500,
+                            })
+                        } else {
+							uni.showLoading({
+									title: '提交中',
+									mask: true,
+								})
+							uni.uploadFile({
+                                url: counter.baseUrl + '/api/new_user/bankCardRecognition',
+                                header: { server: 1, 'ba-user-token': uni.getStorageSync('access_token') },
+                                filePath: tempFilePaths,
+                                name: 'file',
+                                success: async res => {
+                                    const newData = JSON.parse(res.data)||{}
+                                    if (newData.code == 1) {
+										const {data}=newData
+										alipay_numebr.value=data?.card_number
+										bankCardPhoto.value=tempFilePaths
+										uni.hideLoading()
+                                    } else {
+                                        uni.showToast({ title: '图片上传失败~', icon: 'error' })
+                                    }
+                                },
+                                complete() {
+                                    uni.hideLoading()
+                                },
+                            })
+                          }
+						},
+					})
+				}
+			},
+		})
+	}
+	const previewBankCardPhoto = (url) => {
+		uni.previewImage({
+			urls: [url],
+			current: url
+		})
 	}
 </script>
 
@@ -555,4 +685,61 @@
 		}.popupTxte text{
 			line-height: 45rpx;
 		}
+	.bank-card-upload {
+		width: 100%;
+		height: 180rpx;
+		margin: 20rpx 0;
+		border-radius: 10rpx;
+		background-color: #f8f8f8;
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.bank-card-placeholder {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	.upload-icon {
+		font-size: 48rpx;
+		color: #999;
+	}
+	
+	.upload-text {
+		font-size: 28rpx;
+		color: #999;
+		margin-top: 10rpx;
+	}
+	
+	.bank-card-preview {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	
+	.bank-card-images {
+		width: 100%;
+		padding: 20rpx 0;
+		display: flex;
+		flex-direction: column;
+	}
+	
+	.bank-photos-scroll {
+		white-space: nowrap;
+		width: 100%;
+		height: 120rpx;
+	}
+	
+	.bank-photo-item {
+		display: inline-block;
+		width: 200rpx;
+		height: 120rpx;
+		margin-right: 10rpx;
+		border-radius: 10rpx;
+		object-fit: cover;
+	}
 </style>
