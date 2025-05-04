@@ -290,7 +290,6 @@ onBeforeMount(() => {
 .tv-icon {
 	width: 32rpx;
 	height: 32rpx;
-	background-color: #4CAF50;
 	border-radius: 6rpx;
 	padding: 2rpx;
 }

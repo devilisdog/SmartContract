@@ -13,7 +13,7 @@
         <uni-load-more :status="loadingStates"></uni-load-more>
         <view v-for="(itme, index) in ShowData" :key="itme.id" :id="itme.id">
             <view class="pop_up"
-                v-if="ShowData[index - 1] && getTimeDifferenceInMinutes(ShowData[index - 1].created_at, itme.created_at) > 5">
+                v-if="index === 0 || (ShowData[index - 1] && getTimeDifferenceInMinutes(ShowData[index - 1].created_at, itme.created_at) > 5)">
                 {{ dateShowStyle(itme.created_at) }}</view>
             <view class="chat_box_my_image_rigth" v-if="itme.user_id == counter.user_id && itme.type == 'image'">
                 <!-- 我 -->
@@ -46,7 +46,7 @@
                     </view>
                 </view>
                 <!-- <image :src="counter.user_imgs" class="logo_style" lazy-load :lazy-load-margin="0"></image> -->
-                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0">
+                <image :src="itme.avatar" class="logo_style" lazy-load :lazy-load-margin="0">
                 </image>
             </view>
             <!-- 红包消息 - 别人发的 -->
@@ -88,7 +88,7 @@
                         <text>查看详情</text>
                     </view>
                 </view>
-                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0">
+                <image :src="itme.avatar" class="logo_style" lazy-load :lazy-load-margin="0">
                 </image>
             </view>
 
@@ -128,7 +128,7 @@
                     <text>{{ itme.content }}</text>
                 </view>
                 <!-- <image :src="counter.user_imgs" class="logo_style" lazy-load :lazy-load-margin="0"></image> -->
-                <image src="@/static/img/avatar/avatar_default.png" class="logo_style" lazy-load :lazy-load-margin="0">
+                <image :src="itme.avatar" class="logo_style" lazy-load :lazy-load-margin="0">
                 </image>
             </view>
             <view class="chat_box_shop" v-else>
@@ -568,7 +568,7 @@ const selectImage = () => {
 
     // 上传图片
     function upImage(upUrl, type) {
-        uni.showLoading({ title: '', mask: true })
+        uni.showLoading({ title: '发送图片中...', mask: true })
         var nowTime = new Date().getTime()
         uni.uploadFile({
             url: counter.baseUrl + '/api/chat.room/upload',
@@ -632,16 +632,28 @@ const loadingData = () => {
 const dateShowStyle = chatTime => {
     //返回时间显示样式
     var newNow = new Date() //用户当前时间
-    var newCahteTime = new Date(chatTime * 1000) //聊天记录的时间
-    if (newNow.getFullYear() === newCahteTime.getFullYear() && newNow.getMonth() === newCahteTime.getMonth() && newNow.getDate() === newCahteTime.getDate()) {
+    
+    // 处理时间格式，支持字符串格式和时间戳
+    var newCahteTime;
+    if (typeof chatTime === 'string' && chatTime.includes('-')) {
+        newCahteTime = new Date(chatTime.replace(/-/g, '/')) // 将字符串格式转换为Date对象
+    } else {
+        newCahteTime = new Date(chatTime * 1000) // 将时间戳转换为毫秒
+    }
+    
+    // 格式化分钟，确保显示两位数
+    const minutes = newCahteTime.getMinutes() < 10 ? '0' + newCahteTime.getMinutes() : newCahteTime.getMinutes()
+    
+    if (newNow.getFullYear() === newCahteTime.getFullYear() && 
+        newNow.getMonth() === newCahteTime.getMonth() && 
+        newNow.getDate() === newCahteTime.getDate()) {
         //如果是同一天的就只显示小时+分钟的时间
-
-        return newCahteTime.getHours() + ':' + (newCahteTime.getMinutes() < 10 ? '0' + newCahteTime.getMinutes() : newCahteTime.getMinutes())
+        return newCahteTime.getHours() + ':' + minutes
     } else if (newNow.getFullYear() === newCahteTime.getFullYear()) {
         //如果是同年的
-        return newNow.getMonth() + 1 + '-' + newCahteTime.getDate() + ' ' + newCahteTime.getHours() + ':' + newCahteTime.getMinutes()
+        return (newCahteTime.getMonth() + 1) + '-' + newCahteTime.getDate() + ' ' + newCahteTime.getHours() + ':' + minutes
     } else {
-        return newCahteTime.getFullYear() + '-' + newNow.getMonth() + 1 + '-' + newCahteTime.getDate() + ' ' + newCahteTime.getHours() + ':' + newCahteTime.getMinutes()
+        return newCahteTime.getFullYear() + '-' + (newCahteTime.getMonth() + 1) + '-' + newCahteTime.getDate() + ' ' + newCahteTime.getHours() + ':' + minutes
     }
 }
 const longpressSet = (chatInfo, index) => {
@@ -688,10 +700,24 @@ const clickSetChat = e => {
 }
 function getTimeDifferenceInMinutes(timestamp1, timestamp2) {
     //获取两个时间戳相差几分钟
-    var date1 = new Date(timestamp1 * 1000) //将时间戳转换为毫秒
-    var date2 = new Date(timestamp2 * 1000)
-    var timeDifferenceInSeconds = Math.abs(date2.getTime() - date1.getTime()) //取绝对值，因为两个时间戳可能一个在未来，一个在过去
-    var timeDifferenceInMinutes = timeDifferenceInSeconds / 1000 / 60 //将秒转换为分钟
+    //处理日期格式为"2025-04-29 01:16:00"的字符串
+    var date1, date2;
+    
+    //检查参数格式并转换
+    if (typeof timestamp1 === 'string' && timestamp1.includes('-')) {
+        date1 = new Date(timestamp1.replace(/-/g, '/')) //将字符串格式的日期转换为Date对象
+    } else {
+        date1 = new Date(timestamp1 * 1000) //将时间戳转换为毫秒
+    }
+    
+    if (typeof timestamp2 === 'string' && timestamp2.includes('-')) {
+        date2 = new Date(timestamp2.replace(/-/g, '/')) //将字符串格式的日期转换为Date对象
+    } else {
+        date2 = new Date(timestamp2 * 1000)
+    }
+    
+    var timeDifferenceInMilliseconds = Math.abs(date2.getTime() - date1.getTime()) //取绝对值，因为两个时间戳可能一个在未来，一个在过去
+    var timeDifferenceInMinutes = timeDifferenceInMilliseconds / 1000 / 60 //将毫秒转换为分钟
 
     return timeDifferenceInMinutes
 }

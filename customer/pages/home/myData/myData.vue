@@ -203,7 +203,7 @@ const imgsClick = () => {
                     success(restwo) {
                         var imgsUrl = JSON.parse(restwo.data)
                         api.EditAvatar({
-                            avatar: imgsUrl.data.file.url,
+                            avatar: imgsUrl.data.file,
                         }).then(res => {
                             if (res.data.code == 1) {
                                 counter.user_imgs = counter.baseUrl + imgsUrl.data.file.url
