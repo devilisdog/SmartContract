@@ -119,7 +119,7 @@
 						success(res) {
 
 							if (res.data.code == 1) {
-								input_model.value[name_title] = res.data.data.url
+								input_model.value[name_title] = res.data.data.file
 								uni.showToast({
 									title: '上传成功',
 									position: 'center'
@@ -171,7 +171,7 @@
 					},
 					success(res) {
 						if (JSON.parse(res.data).code == 1) {
-							input_model.value[name_title] = JSON.parse(res.data).data.url
+							input_model.value[name_title] = JSON.parse(res.data).data.file
 							uni.showToast({
 								title: '上传成功',
 								position: 'center'
@@ -225,7 +225,7 @@
 			success(res) {
 
 				if (JSON.parse(res.data).code == 1) {
-					input_model.value[name_title] = JSON.parse(res.data).data.url
+					input_model.value[name_title] = JSON.parse(res.data).data.file
 					uni.showToast({
 						title: '上传成功',
 						position: 'center'

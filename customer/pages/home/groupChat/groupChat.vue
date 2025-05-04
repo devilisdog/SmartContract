@@ -279,7 +279,7 @@
 							'type' :Props.chatType,
 							'from' :counter.user_id,
 							'to' :Props.chatType=='public'?'':Props.shop_id,
-							'content':counter.baseUrl+newData.data.url,
+							'content':newData.data.file,
 							'user_info':{
 								'user_logo':counter.user_imgs,
 								'user_name':counter.nickname,

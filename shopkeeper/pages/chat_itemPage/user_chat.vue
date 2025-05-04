@@ -273,7 +273,7 @@
 							'type' :Props.type,
 							'from' :counter.shopBasicsData.id,
 							'to' :Props.type=='public'?'':Props.user_id,
-							'content':counter.baseUrl+newData.data.url,
+							'content':newData.data.file,
 							'user_info':{
 								'user_logo':counter.shopBasicsData.avatar,
 								'user_name':counter.shopBasicsData.nickname,

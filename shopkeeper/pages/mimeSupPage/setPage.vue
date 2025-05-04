@@ -473,12 +473,11 @@
 						success(res) {
 							if (JSON.parse(res.data).code == 1) {
 								uni.hideLoading()
-								var serverImagUrl = JSON.parse(res.data).data.file.url
+								var serverImagUrl = JSON.parse(res.data).data.file
 								api.GetEditAvatar({
 									"avatar": serverImagUrl
 								}).then((imgRes) => {
-									counter.shopBasicsData.avatar = counter.baseUrl +
-										serverImagUrl
+									counter.shopBasicsData.avatar = serverImagUrl
 								})
 							} else {
 								uni.showToast({

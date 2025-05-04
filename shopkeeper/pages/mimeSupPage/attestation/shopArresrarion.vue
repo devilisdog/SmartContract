@@ -167,14 +167,14 @@
 						var arr = {
 							"name": index + '.png',
 							"extname": 'jpg',
-							"url": counter.baseUrl + JSON.parse(res.data).data.url
+							"url": JSON.parse(res.data).data.file
 						}
 						completedImg[index] = arr
 						console.log(completedImg[index])
 
 					} else {
 						var arr = {
-							"src": JSON.parse(res.data).data.url,
+							"src": JSON.parse(res.data).data.file,
 							"index": index
 						}
 						upimgData.value.push(arr)
@@ -228,7 +228,7 @@
 			},
 			success(res) {
 				if (JSON.parse(res.data).code == 1) {
-					videourl.value = counter.baseUrl + JSON.parse(res.data).data.url
+					videourl.value = counter.baseUrl + JSON.parse(res.data).data.file
 					uni.hideLoading()
 					flgvideo.value = true
 				}

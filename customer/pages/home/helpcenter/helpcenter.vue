@@ -109,7 +109,7 @@ import { callWithErrorHandling } from 'vue';
 			 name:'file',
 			 success(res) {
 				 var a = JSON.parse(res.data)
-				 picture.data.push(a.data.file.url)
+				 picture.data.push(a.data.file)
 			 },
 			 fail(err) {
 			  console.log(err);
