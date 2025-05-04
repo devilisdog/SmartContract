@@ -42,14 +42,14 @@
 		uni.showLoading({title:'上传中'})
 		// console.log(counter.baseUrl)
 		uni.uploadFile({
-		    url:counter.baseUrl+'/api/common.Common/setImg',
+		    url:counter.baseUrl+'/api/common.Common/upload',
 		    header:{server:1, "ba-user-token":counter.access_token},
 		    filePath:e.tempFilePaths[0],
 		    name:'file',
 			formData:{"type":'TicketingImg',"name":counter.orderData.order_id},
 		    success(res){
 				uni.hideLoading()
-				counter.orderData.ReturnImages=JSON.parse(res.data).data
+				counter.orderData.ReturnImages=res.data.data.file
 				uni.showToast({
 					title:'图片上传成功~',
 					icon:'none',
@@ -132,7 +132,7 @@
 		cacheImag.length=0
 		//格式话image数据
 		for(var i=0;i<counter.orderData.ReturnImages.length;i++){//初始化判断是否有彩票图片，如果有循环push到cacheImag作为默认数据
-			var arr={"name":i+".jpg","extname":"png","url":counter.baseUrl+counter.orderData.ReturnImages[i]}
+			var arr={"name":i+".jpg","extname":"png","url":counter.orderData.ReturnImages[i]}
 			cacheImag.push(arr)
 		}
 		imageShow.value=true
