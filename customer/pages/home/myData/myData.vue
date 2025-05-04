@@ -206,7 +206,7 @@ const imgsClick = () => {
                             avatar: imgsUrl.data.file,
                         }).then(res => {
                             if (res.data.code == 1) {
-                                counter.user_imgs = counter.baseUrl + imgsUrl.data.file.url
+                                counter.user_imgs =  imgsUrl.data.file
                             }
                             uni.showToast({
                                 title: res.data.data,
