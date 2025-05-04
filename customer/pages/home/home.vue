@@ -70,9 +70,9 @@
 						<text>{{counter.Betrecord.Win_a_prize}}</text>
 						<text>已中奖</text>
 					</view>
-					<view class="content_itme" :style="counter.Betrecord.Win_a_prize>0?'color:red;':''"
+					<view class="content_itme" :style="counter.Betrecord.Wait_a_prize>0?'color:red;':''"
 						@click="screenPage(7)">
-						<text>{{counter.Betrecord.Win_a_prize}}</text>
+						<text>{{counter.Betrecord.Wait_a_prize}}</text>
 						<text>待接单</text>
 					</view>
 				</view>
