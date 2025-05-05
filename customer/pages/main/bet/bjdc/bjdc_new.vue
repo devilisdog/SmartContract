@@ -212,9 +212,9 @@
 		uni.showLoading({title: '加载中'});
 		DataList.value = {}
 		uni.request({//获取比赛数据
-			url:`http://8.210.175.179:8383/api.SportDataV1/odds?type=bjdc_spf&key=qhkj&secret=a4f71eaa25a00144c35eb0a457e636c`,
-			timeout:10000,
-			method:'POST',
+			url:uni.getStorageSync('dataapi')+`/api.SportDataV1/odds?type=bjdc_${Nav[0][play.value].string}&key=yabokj&secret=33ee2210341c057c2638bc3dfc90dfa7`,
+			timeout:5000,
+			method:'GET',
 			success(res){
 				if(res.statusCode==200){
 				if(res.data.list.length==0){
@@ -451,7 +451,7 @@
 		margin-bottom:20rpx;
 		max-height:900rpx;
 		width:100%;
-		/* background-color: #202736; */
+		/* background-color: #FDC830; */
 	}
 	.cntent_button{
 		display: inline-block;
@@ -476,7 +476,7 @@
 		line-height:70rpx;
 		transition:all 0.2s;
 		color:white;
-		background-color: #519a67;
+		background-color: #FDC830;
 	}
 	.buttonBox{
 		display: flex;
@@ -510,7 +510,7 @@
 		justify-content: center;
 		z-index: 1;
 		box-shadow: 0 5rpx 15rpx -8rpx #ebebeb;
-		background-color: #202736; 
+		background-color: #f04b49;
 	}
 	
 	/* 游戏玩法选择弹窗 */
