@@ -397,6 +397,10 @@
 				index: 0,
 				text: String(counter.shopBasicsData.count.OrderCount)
 			})
+			// 播放提示音
+			uni.createInnerAudioContext().src = '@/static/y823.wav'
+			uni.createInnerAudioContext().play()
+
 			if (counter.shopBasicsData.count.OrderCount <= 0) {
 				uni.removeTabBarBadge({
 					index: 0

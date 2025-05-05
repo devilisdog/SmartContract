@@ -187,7 +187,7 @@
 		if (registerType_value.value == 0) {
 			api.PhoneSend({
 				'phone': fromsData.mail,
-				'event': 'phone_captcha'
+				'event': 'user_retrieve_pwd'
 			}).then(res => {
 				if (res.data.code == 1) {
 					uni.showToast({
