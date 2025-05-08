@@ -140,7 +140,13 @@
 	
 	const clickDialogButton=(e)=>{
 		if(e.index==1){
-			indexApi.PostAward({"order_ids":dialogData.order_id}).then((res)=>{
+			const params={
+				order_ids:dialogData.order_id,
+			}
+			if(dialogData.award_rate){
+				params.award_rate=dialogData.award_rate
+			}
+			indexApi.PostAward(params).then((res)=>{
 				if(res.data.code==1){
 					uni.showToast({title:'派奖成功~'})
 					pitchOrderMoney.value=0
@@ -156,8 +162,9 @@
 		}
 		show.value=false
 	}
-	const finalStatement=(order_id)=>{
+	const finalStatement=(order_id, award_rate)=>{
 		dialogData.order_id=order_id
+		dialogData.award_rate=award_rate
 		dialogData.closeData='确定派奖'+order_id+'订单吗？'
 		show.value=true
 	}

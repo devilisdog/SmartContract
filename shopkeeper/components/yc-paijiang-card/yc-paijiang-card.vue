@@ -37,6 +37,9 @@
 		<view class="cardBotton">
 			<text class="textStyle">ID:{{Props.orderData.order_id}}</text>
 			<view style="display: flex;">
+				<view class="buttonStyle" @click="openAwardRateInput">
+					<text>嘉奖比例</text>
+				</view>
 				<view class="buttonStyle" @click="setMoney(Props.orderData)">
 					<text>修改金额</text>
 				</view>
@@ -46,6 +49,28 @@
 			</view>
 		</view>
 	</view>
+	<!-- 嘉奖比例输入弹窗 -->
+	<uni-popup ref="awardRatePopup" type="dialog">
+		<uni-popup-dialog
+			type="info"
+			cancelText="取消"
+			confirmText="确定"
+			title="设置嘉奖比例"
+			:before-close="true"
+			@confirm="confirmAwardRate"
+			@close="closeAwardRate"
+			:mask-click="false"
+		>
+			<view class="award-rate-input">
+				<input 
+					type="digit" 
+					v-model="awardRate" 
+					placeholder="请输入嘉奖比例"
+					class="input-style"
+				/>
+			</view>
+		</uni-popup-dialog>
+	</uni-popup>
 </template>
 
 <script setup>
@@ -88,6 +113,44 @@
 	const finalStatement=(order_id)=>{
 		Emits('finalStatementClick',order_id)
 	
+	}
+	const awardRate = ref('')
+	const awardRatePopup = ref(null)
+
+	// 打开嘉奖比例输入弹窗
+	const openAwardRateInput = () => {
+		awardRate.value = ''
+		awardRatePopup.value.open()
+	}
+
+	// 确认嘉奖比例
+	const confirmAwardRate = () => {
+		if (!awardRate.value) {
+			uni.showToast({
+				title: '请输入嘉奖比例',
+				icon: 'none'
+			})
+			return
+		}
+		
+		const rate = parseFloat(awardRate.value)
+		if (isNaN(rate) || rate < 0 || rate > 100) {
+			uni.showToast({
+				title: '请输入0-100之间的数值',
+				icon: 'none'
+			})
+			return
+		}
+		
+		// 使用finalStatementClick方法，传入订单ID和嘉奖比例
+		Emits('finalStatementClick', Props.orderData.order_id, rate)
+		awardRatePopup.value.close()
+	}
+
+	// 关闭嘉奖比例弹窗
+	const closeAwardRate = () => {
+		awardRate.value = ''
+		awardRatePopup.value.close()
 	}
 </script>
 
@@ -136,5 +199,15 @@
 		border-radius: 20rpx;
 		margin:10rpx auto;
 	}
-
+	.award-rate-input {
+		padding: 10px;
+	}
+	.input-style {
+		width: 100%;
+		height: 40px;
+		border: 1px solid #eee;
+		border-radius: 4px;
+		padding: 0 10px;
+		box-sizing: border-box;
+	}
 </style>
