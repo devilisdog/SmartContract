@@ -112,7 +112,7 @@
 				// "captcha": registerData.mailCode,
 				"group_id": "1",
 				"extend": {
-					'shop_id': counter.shop_id ? counter.shop_id : registerData.InvitationCode,
+					// 'shop_id': counter.shop_id ? counter.shop_id : registerData.InvitationCode,
 					'Inviter': registerData.InvitationCode,
 					'salesman': ''
 				}
