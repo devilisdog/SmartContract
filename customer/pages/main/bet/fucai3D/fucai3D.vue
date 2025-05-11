@@ -446,7 +446,7 @@
 	/* 导航 */
 	.navigation{
 		width: 100%;
-		background-color: #202736; 
+		background-color: #f04b49;
 		position: fixed;
 		display: flex;
 		flex-direction: column;
@@ -493,7 +493,7 @@
 		border-radius: 100rpx;
 		text-align: center;
 		color: white;
-		background-color: #202736; 
+		background-color: #f04b49;
 		transition: 0.18s;
 	}
 
@@ -578,7 +578,7 @@
 	.bottom-button02 {
 		width: 50%;
 		display: flex;
-		background: #202736;
+		background: #f04b49;
 		border-radius: 0 20rpx 20rpx 0;
 		justify-content: center;
 		align-items: center;

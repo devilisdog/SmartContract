@@ -526,7 +526,7 @@
 	/* 导航 */
 	.navigation{
 		width: 100%;
-		background-color: #202736; 
+		background-color: #f04b49;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

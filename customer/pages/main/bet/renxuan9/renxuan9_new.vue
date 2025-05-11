@@ -2,7 +2,7 @@
 	<view class="navigation">
 		<view class="status_bar"></view>
 		<!-- 导航栏 -->
-		<uni-nav-bar background-color="#202736" @clickLeft="back" title="任选9" height="100rpx" color="#fff" left-icon="left" mark="false">
+		<uni-nav-bar background-color="#f04b49" @clickLeft="back" title="任选9" height="100rpx" color="#fff" left-icon="left" mark="false">
 			
 		</uni-nav-bar>
 	</view>
@@ -72,9 +72,9 @@
 	onBeforeMount(()=>{
 		uni.showLoading({title: '加载中'});
 		uni.request({//获取比赛数据(任选九)
-			url:'http://8.210.175.179:8383/api.SportDataV1/odds?type=rx9&key=aaz6wu&secret=a4f71eaa25a00144c35eb0a457e636c',
-			timeout:10000,
-			method:'POST',
+			url:uni.getStorageSync('dataapi')+'/api.SportDataV1/odds?type=rx9&key=yabokj&secret=33ee2210341c057c2638bc3dfc90dfa7',
+			timeout:5000,
+			method:'GET',
 			success(res){
 				if(!pdtime(res.data.list.LotterySaleEndtime)){
 					data.value=res.data.list
@@ -257,7 +257,7 @@
 		position:-webkit-sticky;
 		position:sticky;
 		top:0rpx;
-		background-color: #202736; 
+		background-color: #f04b49;
 	}
 	.status_bar {
 		width: 100%;

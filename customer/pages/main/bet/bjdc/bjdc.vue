@@ -425,7 +425,7 @@
 		margin-bottom:20rpx;
 		max-height:900rpx;
 		width:100%;
-		/* background-color: #202736;  */
+		/* background-color: #f04b49; */
 	}
 	.cntent_button{
 		display: inline-block;
@@ -450,7 +450,7 @@
 		line-height:70rpx;
 		transition:all 0.2s;
 		color:white;
-		background-color: #202736; 
+		background-color: #f04b49;
 	}
 	.buttonBox{
 		display: flex;

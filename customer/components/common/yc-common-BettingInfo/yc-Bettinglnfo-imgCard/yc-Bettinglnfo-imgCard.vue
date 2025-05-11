@@ -31,7 +31,7 @@
 			var arr={//格式化数据
 				"name":i+".jpg",
 				"extname":"jpg",
-				"url":counter.baseUrl+Props.imgData[i]
+				"url":Props.imgData[i]
 			}
 			cacheImag.push(arr)
 		}

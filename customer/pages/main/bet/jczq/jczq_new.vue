@@ -37,16 +37,16 @@
 				<view class="right" style="display: flex;flex-direction: column;">
 					<view class="right_title"
 						style="">
-						<view style="width: 45%; font-size:28rpx;font-weight: 500;">
+						<view style="width: 45%; font-size: 30rpx;font-weight: bolder;">
 							{{item2.HomeTeamAbbName}}
 							<text :class="item2['HHAD'].GoalLine >0?'red':'green'"
-								style="margin-left: 20rpx; font-size:28rpx;font-weight: 500;">
+								style="margin-left: 20rpx; font-size: 30rpx;font-weight: bolder;">
 								{{item2['HHAD'].GoalLine}}</text>
 						</view>
 						<view style=" width: 10%;">
-							<text style="font-size:28rpx;">VS</text>
+							<text style="font-size: 30rpx;">VS</text>
 						</view>
-						<view style="width: 45%; font-size:28rpx;font-weight: 500;">
+						<view style="width: 45%; font-size: 30rpx;font-weight: bolder;">
 							{{item2.AwayTeamAbbName}}
 						</view>
 					</view>
@@ -168,8 +168,9 @@
 		matchInfoList.length=0//初始化数据
 		uni.showLoading({title:'数据获取中',mask:true})
 		uni.request({//获取比赛数据
-			url:'http://8.210.175.179:8383/api.SportDataV1/odds?type=jczq&key=qhkj&secret=a4f71eaa25a00144c35eb0a457e636c',
-			method:'POST',
+			url:uni.getStorageSync('dataapi')+'/api.SportDataV1/odds?type=jczq&key=qhkj&secret=a4f71eaa25a00144c35eb0a457e636c',
+			timeout:5000,
+			method:'GET',
 			success(res){
 				uni.hideLoading()
 				if(res.statusCode==200){
@@ -246,10 +247,12 @@
 	}
 	const getNewMatchId=()=>{//获取每场比赛的的比赛id
 		if(matchInfoList[showData_index.value].subMatchList[0]['newMatchId']){return}
+		// 241217 临时修改，都return
+		return;
 		uni.request({
-			url:'http://175.24.69.36:6688/MatchData',
-			timeout:10000,
-			method:'POST',
+			url:uni.getStorageSync('dataapi')+'/MatchData',
+			timeout:5000,
+			method:'GET',
 			data:{
 				apiName:'getMatchListByDate',
 				game:'407',//玩法ud
@@ -436,13 +439,13 @@
 		align-items: center;
 		padding:0rpx 20rpx;
 		box-sizing: border-box;
-		background-color: #1C2737;
+		background-color: #f04b49;
 		.rigth_navBer{
 			text-align: right;
 		}
 		.middle_navBer{
 			text-align: center;
-			font-weight: 500;
+			font-weight: bold;
 			color: #fff;
 		}
 		view{
