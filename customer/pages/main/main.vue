@@ -41,7 +41,7 @@
 		<view style="width: 94%;height: 200rpx;margin: 0 auto;margin-top: -50rpx;">
 			<swiper :autoplay="true" interval="3000" circular="true" indicator-dots="true"
 				indicator-active-color="#FF0000">
-				<swiper-item v-for="(item, index) in images" :key="index">
+				<swiper-item v-for="(item, index) in banner" :key="index">
 					<image :src="item" style="width: 100%; height: 200rpx;border-radius: 20rpx;"></image>
 				</swiper-item>
 			</swiper>
