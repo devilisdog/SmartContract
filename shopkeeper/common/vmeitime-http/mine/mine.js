@@ -1415,8 +1415,31 @@ export const robotset = (data) => {
 	})
 }
 
+export const setBanner = data => {
+    //设置请求前拦截器
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_shop_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = {
+            server: 1,
+            'ba-user-token': token,
+            'app-version': AppVersion,
+        }
+    }
+    http.interceptor.response = async response => {
+        //设置请求结束后拦截器
+        return await doRequest(response)
+    }
+    return http.request({
+        url: '/api/shopkeeper.mine.Setup/EditBanner',
+        method: 'POST',
+        data,
+    })
+}
+
 // 默认全部导出  import api from '@/common/vmeitime-http/'
 export default {
+	setBanner,
 	robotset,
 	robotadd,
 	robotlist,

@@ -141,6 +141,7 @@
 	import announcement from "@/components/common/announcement_popup.vue"
 	import common from '../../common/common';
 	import customtabbar from "@/components/nav-bottom/nav-bottom.vue"
+
 	const counter = useCounterStore(); //状态管理
 	const redPacketValue = ref(false) //控制红包是否显示
 	const view_Show = ref(false)
@@ -156,6 +157,7 @@
 		'/static/img/main/1.png',
 		'/static/img/main/2.png'
 	])
+	const banner = ref([])
 	onShow(() => {
 		uni.setStorageSync("bgColor", '#F41515')
 		uni.setStorageSync("fontColor", 'rgb(232, 11, 11)')
@@ -185,6 +187,8 @@
 			animationType: 'slide-in-bottom'
 		})
 	}
+
+
 	const topBottom = (type) => { //top店主快捷信息按钮
 		if (type === 'yaoq') {
 			uni.navigateTo({
@@ -331,6 +335,7 @@
 		}).then((res) => { //获取首页信息
 			uni.hideLoading()
 			if (res.data.code === 1) {
+				banner.value = res.data.data.banner? JSON.parse(res.data.data.banner) : []
 				shop_name.value = res.data.data.shop_name
 				palylist[0].sports = res.data.data.play_list.sports
 				palylist[0].welfare = res.data.data.play_list.welfare
@@ -345,6 +350,7 @@
 			announcement_fuc()
 		})
 	}
+
 	const currentTry = ref(0)
 	const dataurl = ref([])
 	const getAvailableApiUrls = () => {

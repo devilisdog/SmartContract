@@ -160,10 +160,16 @@ const getUserInfo= async ()=>{//更新用户数据
 			if (res.data.data.userinfo.group_id == 3) {//判断是否是员工登录
 				counter.staffLoginInfo = res.data.data.clerkInfo
 				
-				counter.shopBasicsData = res.data.data.userinfo //店员的基础信息
+				counter.shopBasicsData = {
+                    ...res.data.data.userinfo,
+					banner:res.data.data.userinfo.banner? JSON.parse(res.data.data.userinfo.banner) : []
+                } //店员的基础信息
 				counter.isneedimgnumber = res.data.data.clerkInfo.ShopConfig.isneedimgnumber
 			}else{
-				counter.shopBasicsData = res.data.data.userinfo //店主的基础信息
+				counter.shopBasicsData = {
+                    ...res.data.data.userinfo,
+					banner:res.data.data.userinfo.banner? JSON.parse(res.data.data.userinfo.banner) : []
+                } //店主的基础信息
 				counter.isneedimgnumber = res.data.data.userinfo.ShopConfig.isneedimgnumber
 				// console.log('counter.isneedimgnumber',counter.isneedimgnumber);
 			}

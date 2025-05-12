@@ -1678,7 +1678,27 @@ export const getFootballLeagueIntelligence = data => {
     })
 }
 
+
+export const getBanner = data => {
+    http.interceptor.request = config => {
+        const token = uni.getStorageSync('access_token') //避免全局获取token失效
+        //添加通用参数
+        config.header = { server: 1, 'ba-user-token': token, 'app-version': AppVersion }
+    }
+    http.interceptor.response = response => {
+        //设置请求结束后拦截器
+        return response
+    }
+
+    return http.request({
+        url: '/api/NewUser/index',
+        method: 'GET',
+        data,
+    })
+}
+
 export default {
+    getBanner,
     getBasketballMatchAnalysis,
     getBasketballTeamStatus,
     getFootballMatchAnalysis,

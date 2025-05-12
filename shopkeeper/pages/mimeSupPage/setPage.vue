@@ -11,6 +11,18 @@
 				mode="aspectFill">
 			</image>
 		</view>
+			<view class="dataCard" @click="setBanner1">
+			<text>轮播图1</text>
+			<image :src="counter.shopBasicsData.banner?.[0]" style="width:80rpx; height:80rpx;border-radius:10rpx;"
+				mode="aspectFill">
+			</image>
+		</view>
+			<view class="dataCard" @click="setBanner2">
+			<text>轮播图2</text>
+			<image :src="counter.shopBasicsData.banner?.[1]" style="width:80rpx; height:80rpx;border-radius:10rpx;"
+				mode="aspectFill">
+			</image>
+		</view>
 		<view class="dataCard" @click="proxy.$refs.nicknameSet.open()">
 			<text>店铺昵称</text>
 			<view style="font-size:22rpx;color: #555555;display: flex;">
@@ -215,6 +227,93 @@
 				.Telephone
 		}
 	])
+
+	const setBanner1 = () => {
+		uni.chooseImage({
+				count: 1,
+				crop: {
+					width: 250,
+					height: 250,
+					quality: 90
+				},
+				success(Res) {
+					uni.showLoading({
+						title: '上传中~'
+					})
+					var imgUrl = Res.tempFilePaths[0]
+					uni.uploadFile({
+						url: counter.baseUrl + '/api/common.Common/upload',
+						header: {
+							server: 1,
+							"ba-user-token": counter.access_token
+						},
+						filePath: imgUrl,
+						name: 'file',
+						success(res) {
+							if (JSON.parse(res.data).code == 1) {
+								uni.hideLoading()
+								var serverImagUrl = JSON.parse(res.data).data.file
+								api.setBanner({
+									banner: [serverImagUrl, counter.shopBasicsData.banner?.[1]]
+								}).then((imgRes) => {
+									counter.shopBasicsData.banner = [serverImagUrl, counter.shopBasicsData.banner?.[1]]
+								})
+							} else {
+								uni.showToast({
+									title: '注意图片最大10MB~',
+									icon: 'error'
+								})
+							}
+						},
+					})
+				}
+			})
+	}
+
+	const setBanner2 = () => {
+		uni.chooseImage({
+				count: 1,
+				crop: {
+					width: 250,
+					height: 250,
+					quality: 90
+				},
+				success(Res) {
+					uni.showLoading({
+						title: '上传中~'
+					})
+					var imgUrl = Res.tempFilePaths[0]
+					uni.uploadFile({
+						url: counter.baseUrl + '/api/common.Common/upload',
+						header: {
+							server: 1,
+							"ba-user-token": counter.access_token
+						},
+						filePath: imgUrl,
+						name: 'file',
+						success(res) {
+							if (JSON.parse(res.data).code == 1) {
+								uni.hideLoading()
+								var serverImagUrl = JSON.parse(res.data).data.file
+								api.setBanner({
+									banner: [counter.shopBasicsData.banner?.[0], serverImagUrl]
+								}).then((imgRes) => {
+									counter.shopBasicsData.banner = [counter.shopBasicsData.banner?.[0], serverImagUrl]
+								})
+							} else {
+								uni.showToast({
+									title: '注意图片最大10MB~',
+									icon: 'error'
+								})
+							}
+						},
+					})
+				}
+			})
+	}
+	
+	
+	
 	const clickDialogButton = (e) => { //退出登录
 		show.value = false
 		if (e.index == 1) {

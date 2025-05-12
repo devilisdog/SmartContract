@@ -387,16 +387,13 @@ const clickFollow = async item => {
 // 查看跟单详情
 const viewFollowDetail = followData => {
     const follow_user_id = followData.content.user_id
+
     // 这里可以跳转到跟单详情页
     if (follow_user_id && follow_user_id != counter.user_id) {
         uni.navigateTo({
             url: '/pages/follow/homepage?userId=' + follow_user_id,
         })
-    } else {
-        uni.navigateTo({
-            url: '/pages/follow/homepage',
-        })
-    }
+    } 
 }
 
 /*
