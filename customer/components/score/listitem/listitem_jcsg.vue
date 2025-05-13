@@ -1,6 +1,6 @@
 <template>
 	<view class="Card_zuqiu">
-		<view class="top">
+		<view class="top"  v-if="props.cardInfo.type=='1'">
 			<view style="flex: 1;display: flex; flex-direction: column; ">
 				
 				<text style="font-size: 20rpx; color: blueviolet;">{{props.cardInfo.short_comp}}</text>
@@ -22,6 +22,28 @@
 					<text style="font-size: 35rpx;">{{props.cardInfo.short_away}}</text>
 					<image v-if="props.cardInfo.away_logo" :src="props.cardInfo.away_logo" style="width: 40rpx; height: 40rpx; margin-right: 10rpx;"></image>
 				</view>
+			</view>
+		</view>
+			<view class="top"  v-if="props.cardInfo.type=='2'">
+			<view style="flex: 1;display: flex; flex-direction: column; ">
+				<text style="font-size: 20rpx; color: blueviolet;">{{props.cardInfo.short_comp}}</text>
+				<text style="font-size: 20rpx;">{{props.cardInfo.issue_num}}</text>
+			</view>
+			<view style="display: flex; flex-direction: row; ;flex: 8;justify-content: center;align-items: center; margin-right: 50rpx;">
+				<view style="display: flex; align-items: center; width: 200rpx;">
+					<image v-if="props.cardInfo.away_logo" :src="props.cardInfo.away_logo" style="width: 40rpx; height: 40rpx; margin-right: 10rpx;"></image>
+					<text style="font-size: 35rpx;">{{props.cardInfo.short_away}}</text>
+				</view>
+				
+				<view style="flex: 1 ;display: flex;flex-direction: column;text-align: center;">
+					<text style="color: red; font-size: 45rpx;" v-if="props.cardInfo.home_score&&props.cardInfo.away_score">{{props.cardInfo.away_score+":"+props.cardInfo.home_score}}</text>
+				</view>
+
+				<view style="display: flex; align-items: center; width: 200rpx; justify-content: flex-end;">
+					<text style="font-size: 35rpx;">{{props.cardInfo.short_home}}</text>
+					<image v-if="props.cardInfo.home_logo" :src="props.cardInfo.home_logo" style="width: 40rpx; height: 40rpx; margin-right: 10rpx;"></image>
+				</view>
+
 			</view>
 		</view>
 		<!-- 足球 -->
