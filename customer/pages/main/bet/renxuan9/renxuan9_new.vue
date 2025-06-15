@@ -79,11 +79,7 @@
 				if(!pdtime(res.data.list.LotterySaleEndtime)){
 					data.value={
 						...res.data.list,
-						MatchList:res.data.list.MatchList.map(item=>{
-							return {
-								...item,
-							}
-						}).sort((a,b)=>Number(a.MatchNum)-Number(b.MatchNum))
+						MatchList:res.data.list.MatchList?.sort((a,b)=>Number(a.MatchNum)-Number(b.MatchNum))
 					}
 					BettingContent.lssue=res.data.list.LotteryDrawNum
 					tabsData.push({

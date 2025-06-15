@@ -86,7 +86,10 @@
 			method:'GET',
 			success(res){
 				if(!pdtime(res.data.list.LotterySaleEndtime)){
-					data.value=res.data.list
+					data.value={
+						...res.data.list,
+						MatchList:res.data.list.MatchList?.sort((a,b)=>Number(a.MatchNum)-Number(b.MatchNum))
+					}
 					BettingContent.lssue=res.data.list.LotteryDrawNum
 					tabsData.push({
 						businessDate:common.getNowFormatDate(0,getjiezhitime(res.data.list.LotterySaleEndtime)),
