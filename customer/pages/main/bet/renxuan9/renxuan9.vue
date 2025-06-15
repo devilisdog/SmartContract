@@ -2,103 +2,140 @@
 	<view class="navigation">
 		<view class="status_bar"></view>
 		<!-- 导航栏 -->
-		<uni-nav-bar @clickLeft="back" height="100rpx" left-icon="left" mark="false">
-			<view class="" style="margin: auto;">
-				<!-- 从下往上的选择栏 -->
-				<text style="font-size: 36rpx;">任选9</text>
-			</view>
+		<uni-nav-bar background-color="#f04b49" @clickLeft="back" title="任选9" height="100rpx" color="#fff" left-icon="left" mark="false">
+			
 		</uni-nav-bar>
 	</view>
-	<view class="nogame" v-show="!data.matchList">
+	<view class="nogame" v-show="!data.MatchList">
 		<image src="@/static/img/main/ico-game-no.png" mode="aspectFit" style="width:500rpx;height:500rpx;"></image>
 	</view>
-	<classify :select_arr="tabsData"></classify>
+	<scroll-view scroll-x class="tabs-scroll">
+		<view class="tabs-container">
+			<view 
+				v-for="(item, index) in tabsList" 
+				:key="index"
+				class="tab-item"
+				:class="{ active: currentDrawNum === item }"
+				@click="handleTabChange(index)"
+			>
+				{{item}}
+			</view>
+		</view>
+	</scroll-view>
 	<view style="padding-bottom:100rpx;">
-		<view class="content_box" v-for="itme,index in data.matchList">
+		<view class="content_box" v-for="itme,index in filteredMatchList">
 			<view class="left">
 				<view style="display:flex;flex-direction: column; margin: auto; text-align:center;">
-					<text style="margin: 2rpx;">场次{{index+1}}</text>
+					<text style="margin: 2rpx;">场次{{itme.MatchNum}}</text>
 					<text style="margin: 2rpx;">{{itme.matchName}}</text>
-					<text style="margin: 2rpx; color: #909399;font-size: 24rpx;">{{itme.startTime}}</text>
+					<text style="margin: 2rpx; color: #909399;font-size: 24rpx;">{{itme.StartTime}}</text>
 				</view>
 			</view>
 			<view class="right" style="display: flex;flex-direction: column;">
 				<view style="display: flex;margin-top: 20rpx; align-items: center;justify-content: center;">
-					<view style="width: 45%; font-size: 25rpx;font-weight: bolder;text-align: center;">
-						<text style="color: red;font-size: 25rpx;font-weight: bolder;">(主)</text>
-						{{itme.masterTeamName}}
+					<view style="width: 45%; font-size: 30rpx;font-weight: bolder;text-align: center;">
+						{{itme.MasterTeamName}}
+						<text style="color: red;font-size: 20rpx;font-weight: bolder;">(主)</text>
 					</view>
 					<view style=" width: 10%;text-align: center;">
 						<text style="font-size: 25rpx; font-weight: bolder;">VS</text>
 					</view>
-					<view style="width: 45%; font-size: 25rpx;font-weight: bolder;text-align: center;">
+					<view style="width: 45%; font-size: 30rpx;font-weight: bolder;text-align: center;">
 						<text style="color: red;font-size: 25rpx;font-weight: bolder;">(客)</text>
-						{{itme.guestTeamName}}
+						{{itme.GuestTeamName}}
 					</view>
 				</view>
 				<view>
 					<renxuan9checkbox :Refresh="forceRefresh" 
 						:fixSelectData="itme"
-						:Tiemsort = "data.lotterySaleEndtime" 
+						:Tiemsort = "data.LotterySaleEndtime" 
 						ref="childRef" 
-						@getSelectList="getChildrenSelectList($event,common.getNowFormatDate(0,getjiezhitime(data.lotterySaleEndtime)))"
+						@getSelectList="getChildrenSelectList($event,common.getNowFormatDate(0,getjiezhitime(data.LotterySaleEndtime)))"
 					/>
 				</view>
 			</view>
 		</view>
 	</view>
-	<fuiDialog
-		:show="ShowTIPS" title="温馨提示"
-		content="暂时没有数据,可以去看看其他玩法哦 ; )"
-		:buttons="fuiButtons" 
-		:maskClosable='false'
-		@click='fuiClick'>
-	</fuiDialog>
 	<view class="footer" style="">
 		<Footer :count="count" @clickbutton="onclickbutton" @clickempty="onclickempty"></Footer>
 	</view>
 </template>
 
 <script setup>
-	import Footer from "@/components/main/bet/renxuan9/footer.vue"
-	import renxuan9checkbox from "@/components/main/bet/renxuan9/renxuan9-checkbox.vue"
+	import Footer from "@/components/main/bet/renxuan9/new/footer.vue"
+	import renxuan9checkbox from "@/components/main/bet/renxuan9/new/renxuan9-checkbox.vue"
 	import fuiDialog from '@/components/fui-dialog/fui-dialog.vue'
 	import common from "@/common/getdatetime.js"
 	import api from "@/common/vmeitime-http/sporttery.js"
-	import {ref,onBeforeMount,reactive,watch} from 'vue'
+	import {ref,onBeforeMount,reactive,watch,computed} from 'vue'
 	import {useCounterStore} from '@/stores/counter'
-	import classify from "@/components/main/classifySelect/classifySelect.vue"
 	const counter = useCounterStore(); //状态管理
-
-	const nogame = ref(true)
 	const data = ref([])
-	const fixSelectData = reactive([])
-	const tabsData=reactive([])
+	const tabsList=reactive([])//比赛按照期数分类list
+	const currentDrawNum = ref('') // 当前选中的期数
+
+	// 计算属性：根据当前选中期数过滤比赛列表
+	const filteredMatchList = computed(() => {
+		if (!currentDrawNum.value) return data.value.MatchList || []
+		return (data.value.MatchList || []).filter(match => match.LotteryDrawNum === currentDrawNum.value)
+	})
+
+	// 处理tab切换
+	const handleTabChange = (index) => {
+		currentDrawNum.value = tabsList[index]
+	}
+
+	// 投注内容 传到下一个页面的数据模板
+	const BettingContent = reactive({
+		'type': '任选九',
+		'gametype': '混合过关',
+		'remarks': [],
+		'Content': [],
+		'lssue' :'',
+	})
 	onBeforeMount(()=>{
 		uni.showLoading({title: '加载中'});
-		api.Getctzq({"param": "90",}).then((res) => {
-			uni.hideLoading();
-			if (res.data.code === 1) {
-				BettingContent.lssue=res.data.data.sfcMatch.lotteryDrawNum
-				data.value = res.data.data.sfcMatch
-				tabsData.push({
-					businessDate:common.getNowFormatDate(0,getjiezhitime(res.data.data.sfcMatch.lotterySaleEndtime)),
-					matchNumber:res.data.data.sfcMatch.matchList.length,
-					weekday:'截止'
-				})
-			} else {
+		uni.request({//获取比赛数据(任选九)
+			url:uni.getStorageSync('dataapi')+'/api.SportDataV1/odds?type=rx9&key=yabokj&secret=33ee2210341c057c2638bc3dfc90dfa7',
+			timeout:5000,
+			method:'GET',
+			success(res){
+				if(!pdtime(res.data.list.LotterySaleEndtime)){
+					data.value=res.data.list
+
+					res.data.list.MatchList.forEach(item=>{
+						//比赛按照期数分类
+						tabsList.push(item.LotteryDrawNum)
+					})
+					
+					// 设置默认选中的期数
+					if (tabsList.length > 0) {
+						currentDrawNum.value = tabsList[0]
+					}
+					
+					BettingContent.lssue=res.data.list.LotteryDrawNum
+					// 按照组件要求构造数据结构
+					tabsData.push({
+						businessDate: '',
+						weekday: res.data.list.LotteryDrawNum,
+						matchNumber: res.data.list.MatchList.length,
+						selectNumber: ''
+					})
+				}
+				
+				uni.hideLoading()
+			},
+			fail(err){
+				uni.hideLoading()
 				uni.showToast({
-					title:'往期中奖数据获取失败~',
-					position:"center",
-					icon:"error"
+					title:'数据获取失败~',
+					icon:'none',
+					position:'center',
 				})
-				ShowTIPS.value = true
 			}
 		})
+		uni.hideLoading()
 	})
-	
-	//温馨提示显示值
-	const ShowTIPS = ref(false)
 	//温馨提示的两个按钮 *可以增减
 	const fuiButtons = ref([
 		{
@@ -110,23 +147,10 @@
 			color:'#ffba58',
 		}
 	])
-	//温馨提示的两个按钮点击
-	const fuiClick = (e) =>{back()}
-	
-	// 投注内容 传到下一个页面的数据模板
-	const BettingContent = reactive({
-		'type': '任选九',
-		'gametype': '混合过关',
-		'remarks': [],
-		'Content': [],
-		'lssue' :'',
-	})
-	
-	
 	// 选择场次的数量
 	const count = ref(0)
 	
-	const getChildrenSelectList = (data,time) => {
+	const getChildrenSelectList = (data,time) => {//选择
 		if (data.selectBoole) { //增加
 			data.gameData.orderDeadline=time
 			// 判断是不是空  空的话直接添加
@@ -212,8 +236,10 @@
 	const getjiezhitime=(time)=>{
 		if(counter.gameAstrict.advance != undefined){systime.value = counter.gameAstrict.advance}
 		var date=new Date(time.replace(/-/g,'/'))
+		
 		date.setMinutes(date.getMinutes()-systime.value)
 		var newTime=date.getTime()
+		
 		return newTime
 	}
 	
@@ -231,6 +257,18 @@
 		}
 	})
 	
+	
+	const pdtime = (e)=>{
+		var nowDate = new Date()
+		var newtime = new Date(e)
+		// console.log(nowDate.getTime(),newtime.getTime());
+		if(nowDate.getTime()>newtime.getTime()){
+			return true
+		}else{
+			return false
+		}
+		
+	}
 
 	// 返回按钮
 	const back = () => {
@@ -252,10 +290,11 @@
 		background-color:#fbfbfb;
 	}
 	.navigation{
-		z-index:2;
+		z-index:999;
 		position:-webkit-sticky;
 		position:sticky;
-		top:0rpx
+		top:0rpx;
+		background-color: #f04b49;
 	}
 	.status_bar {
 		width: 100%;
@@ -303,5 +342,29 @@
 		position: fixed;
 		top:calc(50% - 350rpx);
 		left:calc(50% - 250rpx);
+	}
+	.tabs-scroll {
+		width: 100%;
+		white-space: nowrap;
+		background-color: #fff;
+		padding: 20rpx 0;
+	}
+	.tabs-container {
+		display: inline-flex;
+		padding: 0 20rpx;
+	}
+	.tab-item {
+		display: inline-block;
+		padding: 15rpx 30rpx;
+		margin-right: 20rpx;
+		background-color: #f5f5f5;
+		border-radius: 30rpx;
+		font-size: 28rpx;
+		color: #333;
+		transition: all 0.3s;
+	}
+	.tab-item.active {
+		background-color: #f04b49;
+		color: #fff;
 	}
 </style>
